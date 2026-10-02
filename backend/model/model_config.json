@@ -1,0 +1,55 @@
+{
+  "model_name": "efficientnet_b3",
+  "input_size": 300,
+  "mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "class_codes": [
+    "akiec",
+    "bcc",
+    "bkl",
+    "df",
+    "mel",
+    "nv",
+    "vasc"
+  ],
+  "class_names": [
+    "Actinic keratoses / intraepithelial carcinoma",
+    "Basal cell carcinoma",
+    "Benign keratosis-like lesions",
+    "Dermatofibroma",
+    "Melanoma",
+    "Melanocytic nevi",
+    "Vascular lesions"
+  ],
+  "mc_dropout_passes": 10,
+  "entropy_threshold": 0.4129127562046051,
+  "melanoma_flag_threshold": 0.05,
+  "melanoma_index": 4,
+  "test_metrics": {
+    "accuracy": 0.8348369188063844,
+    "macro_precision": 0.7309925050234728,
+    "macro_recall": 0.7431207114540728,
+    "macro_f1": 0.732192342518835,
+    "macro_auc_ovr": 0.963228705361824,
+    "melanoma_sensitivity": 0.5753424657534246
+  },
+  "mission_metrics": {
+    "mc_accuracy": 0.835530881332408,
+    "review_rate": 0.31297709923664124,
+    "accuracy_unflagged": 0.9353535353535354,
+    "accuracy_flagged": 0.6164079822616408,
+    "errors_caught_by_flag": 0.729957805907173,
+    "melanoma_sensitivity_argmax": 0.6095890410958904,
+    "melanoma_sensitivity_with_flag": 0.8767123287671232
+  },
+  "disclaimer": "Decision-support prototype only. Not a diagnosis. Consult a qualified clinician.",
+  "limitations": "Trained on HAM10000 (no skin-tone labels, mostly lighter skin). Not validated on Fitzpatrick V-VI."
+}

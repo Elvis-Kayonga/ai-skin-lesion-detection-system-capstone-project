@@ -1,0 +1,14 @@
+.env
+*.db
+__pycache__/
+.venv/
+venv/
+node_modules/
+dist/
+backend/storage/*
+!backend/storage/.gitkeep
+data/
+*.zip
+.ipynb_checkpoints/
+*_checkpoint.pt
+kaggle.json
