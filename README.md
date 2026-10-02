@@ -100,11 +100,17 @@ Open http://localhost:5173 in your browser.
 
 ## 3. How to use the app
 
-1. Open http://localhost:5173 and click **No account? Register**. Use any email and a password of at least 8 characters.
-2. Choose an image from the `sample_images/` folder and click **Analyse image**.
-3. Read the result card: top class, probability bars, uncertainty badge, and the heatmap next to the original.
-4. Try `blurry_example_will_be_rejected.jpg` and `not_an_image_will_be_rejected.txt` to see the quality checks reject bad input with a clear message.
-5. Open **History** to see past cases, and **Limitations** for the built-in limitations panel.
+There is no login screen. Open http://localhost:5173 and you are straight in.
+
+1. Add a photo in one of three ways: click **Take a photo** to use your camera, click **Upload a photo**, or drag and drop a file onto the box.
+2. Click **Analyse image**.
+3. Read the result card: most likely class, uncertainty meter, probability bars, and the heatmap next to your photo.
+4. Try `blurry_example_will_be_rejected.jpg` and `not_an_image_will_be_rejected.txt` from `sample_images/` to see the quality checks reject bad input with a clear message.
+5. Open **History** to see past cases, and **Limitations** for the full limitations panel. A short version is also shown on the main screen.
+
+Camera notes: browsers only allow camera access on `localhost` or on an HTTPS site, and you must click Allow when asked. On a phone without in-page camera support, **Take a photo** opens the phone's own camera instead. If the camera is blocked, the app says so and you can upload a photo instead.
+
+Privacy note: with no login, the app quietly creates a private anonymous session in your browser the first time you open it. Your history belongs to that browser only. Clearing your browser data removes the link to your past cases. The server still requires a token for every prediction and history request, so one visitor cannot see another visitor's cases.
 
 The sample images come from the HAM10000 dataset. **They may have been part of the training data, so do not treat their results as a measure of accuracy.** They are only there so you can try the interface. Real accuracy figures are in the Results section.
 
@@ -175,44 +181,48 @@ The full architecture printout, code and charts are in `notebooks/skin_lesion_tr
 
 These are real screenshots of the running app (see `docs/screenshots/`). The sample images may have been in the training data, so the screenshots show the interface, not accuracy.
 
-**Login, with the limitations panel visible from the start**
+**Home screen: add a photo, with the limitations shown up front**
 
-![Login](docs/screenshots/01_login_and_limitations.png)
+![Home](docs/screenshots/01_home.png)
+
+**Take a photo with the camera.** This screenshot was taken with a browser test camera (the green pattern), so it only shows the layout. On a real device it shows your live camera.
+
+![Camera](docs/screenshots/02_camera.png)
 
 **Upload with preview**
 
-![Upload](docs/screenshots/02_upload_preview.png)
+![Upload](docs/screenshots/03_upload_preview.png)
 
 **Result with a high-uncertainty "Review recommended" banner**
 
-![Result with review flag](docs/screenshots/04_result_sample_b.png)
+![Result with review flag](docs/screenshots/05_result_sample_b.png)
 
 **Result with low uncertainty (no banner)**
 
-![Result low uncertainty](docs/screenshots/03_result_sample_a.png)
+![Result low uncertainty](docs/screenshots/04_result_sample_a.png)
 
 Note: the same image can give slightly different probabilities each time, because MC Dropout is random. Images close to the entropy threshold can flip between flagged and not flagged from one run to the next.
 
 **Quality checks reject bad input**
 
-![Blurry image rejected](docs/screenshots/06_rejected_blurry_image.png)
-![Wrong file type rejected](docs/screenshots/07_rejected_wrong_file_type.png)
+![Blurry image rejected](docs/screenshots/07_rejected_blurry_image.png)
+![Wrong file type rejected](docs/screenshots/08_rejected_wrong_file_type.png)
 
 **Case history**
 
-![Case history](docs/screenshots/08_case_history.png)
+![Case history](docs/screenshots/09_case_history.png)
 
 **Limitations panel**
 
-![Limitations](docs/screenshots/09_limitations_panel.png)
+![Limitations](docs/screenshots/10_limitations_panel.png)
 
 **API page (Swagger UI)**
 
-![Swagger UI](docs/screenshots/10_swagger_ui.png)
+![Swagger UI](docs/screenshots/11_swagger_ui.png)
 
 **Phone-width layout**
 
-![Mobile view](docs/screenshots/11_mobile_view.png)
+![Mobile view](docs/screenshots/12_mobile_view.png)
 
 ## 6. API summary
 
@@ -231,7 +241,9 @@ Upload checks, each with a clear error message: file type (JPEG or PNG only, 415
 
 Each prediction returns: `case_id`, `predicted_class`, `class_name`, `probabilities` (all 7), `entropy`, `entropy_threshold`, `review_recommended`, `review_reason`, `heatmap_base64`, `model_version`, `disclaimer` and `inference_ms`.
 
-Try it in Swagger UI: open `/docs`, use `/auth/register`, click **Authorize** and log in, then try `/predict`.
+Try it in Swagger UI: open `/docs`, use `/auth/register` to create an account, click **Authorize** and enter the same email and password, then try `/predict`.
+
+The web app has no login screen. It calls `/auth/register` and `/auth/login` for you in the background, with a random anonymous account stored in your browser.
 
 ## 7. Deployment plan
 
