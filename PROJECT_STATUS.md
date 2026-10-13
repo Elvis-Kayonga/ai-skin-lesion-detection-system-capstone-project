@@ -87,6 +87,7 @@ frontend/
 notebooks/skin_lesion_training.ipynb   Colab notebook (clean copy, NO outputs yet)
 docs/figures/             Charts from the real run
 docs/results/             Metrics CSVs from the real run
+docs/Capstone_Proposal_Kayonga_Elvis.pdf   The capstone proposal (33 pages)
 docs/screenshots/         12 UI screenshots (real, taken from the running app)
 (docs/DEMO_SCRIPT.md was deleted from the repo by the user on GitHub on purpose; see D11)
 sample_images/            3 HAM10000 sample images + a blurry file + a .txt file for rejection demos
@@ -221,6 +222,11 @@ Entry format:
 - Files: path1, path2
 - Verified by: what you ran or checked (build, smoke test, screenshot)
 ```
+
+### 2026-10-13 - Added the capstone proposal PDF to the repo (git: see top line)
+- Moved the user's proposal PDF (33 pages, scanned: no emails, phone numbers, IDs or credentials) from the project root to `docs/Capstone_Proposal_Kayonga_Elvis.pdf` (shorter name) and linked it in README (Links list and file map).
+- Files: docs/Capstone_Proposal_Kayonga_Elvis.pdf, README.md, PROJECT_STATUS.md
+- Verified by: extracted the PDF text and scanned it before adding it to the public repo.
 
 ### 2026-10-13 - Added this status document, synced with GitHub (git: see top line)
 - Created PROJECT_STATUS.md so any AI assistant knows the goal, progress and rules, and must update it after every change.
