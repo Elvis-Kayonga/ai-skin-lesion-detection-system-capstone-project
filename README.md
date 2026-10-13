@@ -13,6 +13,7 @@ Author: Kayonga Elvis (African Leadership University, BSc Software Engineering, 
 Links:
 
 - GitHub repo: https://github.com/Elvis-Kayonga/ai-skin-lesion-detection-system-capstone-project
+- Capstone proposal (PDF): [docs/Capstone_Proposal_Kayonga_Elvis.pdf](docs/Capstone_Proposal_Kayonga_Elvis.pdf)
 - Demo video: https://youtu.be/xynFxpXcZa8
 
 > **Please read the Limitations section before judging the results.** The model was trained on a dataset that is mostly light-skinned patients and has not been tested on Black or dark skin. This project does not claim it works for dark skin. Measuring that is the main future work.
@@ -41,7 +42,7 @@ backend/          FastAPI server, model code, database, upload checks
   model/          trained weights and model_config.json
 frontend/         React web app (Vite)
 notebooks/        Colab notebook: data charts, model, training, metrics
-docs/             figures, result tables, screenshots
+docs/             figures, result tables, screenshots, capstone proposal (PDF)
 sample_images/    a few images to try the app with
 docker-compose.yml   production-style setup (PostgreSQL + API + web)
 ```
