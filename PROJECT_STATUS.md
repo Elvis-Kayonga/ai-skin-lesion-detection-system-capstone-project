@@ -1,6 +1,6 @@
 # PROJECT STATUS (living document for AI coding assistants)
 
-Last updated: 2026-10-13 | Updated by: AI assistant (synced with GitHub, demo video link added) | Git: main at 937e5c1 on GitHub; local has uncommitted README fix + this file
+Last updated: 2026-10-13 | Updated by: AI assistant (pulled PR #1, recorded Phase 1 notebook) | Git: main at f95c3b1 on GitHub; local matches it (this update is a local commit, not pushed)
 
 ---
 
@@ -85,6 +85,7 @@ frontend/
   src/styles.css          Design (teal theme, responsive)
   Dockerfile, package.json
 notebooks/skin_lesion_training.ipynb   Colab notebook (clean copy, NO outputs yet)
+notebooks/phase1_export_logits.ipynb   Colab notebook (added by PR #1, not yet run): rebuilds and verifies the original split, saves it as CSV, exports raw MC Dropout logits for val and test (for later calibration). Trains nothing.
 docs/figures/             Charts from the real run
 docs/results/             Metrics CSVs from the real run
 docs/Capstone_Proposal_Kayonga_Elvis.pdf   The capstone proposal (33 pages)
@@ -167,6 +168,7 @@ Training: EfficientNet-B3 14 epochs, MobileNetV2 10 epochs; AdamW lr 3e-4 wd 1e-
 10. Public hosting would allow anyone to create sessions and upload. No rate limiting yet.
 11. Real webcam path is untested (only a fake camera in headless Edge).
 12. Docker images have never been built or run.
+13. `main` contains a commit authored by an AI account (27c7159, merged through PR #1). GitHub's Contributors list can therefore show that account, which goes against hard rule 7. The user has not yet decided what to do about it (leave it, or rewrite history with a force push, which is destructive and needs the user's explicit approval). Every AI session must read this file first so it does not repeat this: no AI author or co-author on any commit.
 
 ---
 
@@ -190,6 +192,8 @@ Code changes to make when the host is chosen:
 - [ ] Update the README deployment section with the real steps and the live URLs.
 
 **C. Quality and science (later)**
+- [ ] Run `notebooks/phase1_export_logits.ipynb` in Colab (uploads `kaggle.json` and `backend/model/efficientnet_b3_best.pth`; about 2 min on a T4). It must pass its own split check (class counts equal `docs/results/split_class_counts.csv`) and its test accuracy check (about 83.5%). Download `phase1_out.zip` (split CSVs and `mc_logits_val.npz`, `mc_logits_test.npz`). Do not commit the zip.
+- [ ] Then, on a laptop: temperature scaling and re-choosing the entropy and melanoma thresholds on the validation logits only; report on test once. Goal: reduce overconfidence and improve the melanoma flag. Any change to `model_config.json` thresholds needs the user's approval (model contract).
 - [ ] Evaluate on a diverse external set with Fitzpatrick labels; report sensitivity by skin tone. Do not claim improvement until measured.
 - [ ] Investigate improving melanoma sensitivity (more data, calibration, better threshold search).
 - [ ] Add export of split ids in the notebook so held-out sample images can be identified.
@@ -222,6 +226,14 @@ Entry format:
 - Files: path1, path2
 - Verified by: what you ran or checked (build, smoke test, screenshot)
 ```
+
+### 2026-10-13 - Pulled PR #1 from GitHub, recorded the Phase 1 notebook (git: f95c3b1 pulled; this entry is a local commit)
+- Fast-forwarded local main from 614659f to f95c3b1. New: `notebooks/phase1_export_logits.ipynb` (7 cells, no outputs), created in a separate web AI session on an AI-created branch and merged by the user as PR #1.
+- Read the notebook before accepting it: it trains nothing, verifies the split and checkpoint, exports MC Dropout logits; no secrets (it only tells the user to upload `kaggle.json` in Colab).
+- Flagged known issue 13: commit 27c7159 is authored by an AI account, visible in Contributors; user decision pending.
+- Reworded one assertion message in the notebook that named an AI tool (logic unchanged), per rule 7.
+- Files: notebooks/phase1_export_logits.ipynb (new, from GitHub; one message reworded), PROJECT_STATUS.md
+- Verified by: `git fetch`, `git log HEAD..origin/main`, `git pull --ff-only`, read all notebook cells, secrets scan.
 
 ### 2026-10-13 - Added the capstone proposal PDF to the repo (git: see top line)
 - Moved the user's proposal PDF (33 pages, scanned: no emails, phone numbers, IDs or credentials) from the project root to `docs/Capstone_Proposal_Kayonga_Elvis.pdf` (shorter name) and linked it in README (Links list and file map).
