@@ -113,7 +113,7 @@ Camera notes: browsers only allow camera access on `localhost` or on an HTTPS si
 
 Privacy note: with no login, the app quietly creates a private anonymous session in your browser the first time you open it. Your history belongs to that browser only. Clearing your browser data removes the link to your past cases. The server still requires a token for every prediction and history request, so one visitor cannot see another visitor's cases.
 
-The sample images come from the HAM10000 dataset. **They may have been part of the training data, so do not treat their results as a measure of accuracy.** They are only there so you can try the interface. Real accuracy figures are in the Results section.
+The sample images come from the HAM10000 dataset. Two of them (`ISIC_0031939`, `ISIC_0033609`) were in the **training** set, so the model has seen them. The third (`ISIC_0030440`, a melanoma) was in the held-out **test** set. One image says nothing reliable about accuracy either way. The images are only there so you can try the interface. Real accuracy figures are in the Results section. The split files are in `docs/results/split_train.csv`, `split_val.csv` and `split_test.csv`.
 
 ## 4. Results
 
@@ -180,7 +180,7 @@ The full architecture printout, code and charts are in `notebooks/skin_lesion_tr
 
 ## 5. Designs and screenshots
 
-These are real screenshots of the running app (see `docs/screenshots/`). The sample images may have been in the training data, so the screenshots show the interface, not accuracy.
+These are real screenshots of the running app (see `docs/screenshots/`). Two of the three sample images were in the training data and one was in the held-out test set, so the screenshots show the interface, not accuracy.
 
 **Home screen: add a photo, with the limitations shown up front**
 
@@ -288,7 +288,7 @@ Please read these.
 6. **The flag is random near the threshold.** MC Dropout is stochastic, so the same image can be flagged on one run and not on the next.
 7. **Small classes.** Dermatofibroma (9 test images) and vascular lesions (21) have too few examples for reliable scores.
 8. **Blur check is coarse.** It was calibrated on 43 HAM10000 images and only catches severe blur. A mildly blurry or badly lit photo can pass.
-9. **Sample images may be training images.** Results on `sample_images/` and in the screenshots are not accuracy evidence.
+9. **Two of the three sample images were training images.** Results on a single image, including `sample_images/` and the screenshots, are not accuracy evidence.
 10. **No real patient data.** The app is a prototype. Do not upload photos of real patients.
 
 ### Planned next steps for skin tone
