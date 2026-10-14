@@ -1,6 +1,6 @@
 # PROJECT STATUS (living document for AI coding assistants)
 
-Last updated: 2026-10-13 | Updated by: AI assistant (pulled PR #1, recorded Phase 1 notebook) | Git: main at f95c3b1 on GitHub; local matches it (this update is a local commit, not pushed)
+Last updated: 2026-10-14 | Updated by: AI assistant (added and verified Phase 1 outputs, pushed as the user) | Git: main, pushed to GitHub on 2026-10-14; run `git log --oneline -n 5` for the exact head
 
 ---
 
@@ -30,7 +30,7 @@ End every answer with a block titled `STATUS UPDATE` containing the exact text t
 4. Keep scope small: an MVP for a supervisor demo.
 5. No real patient data. No secrets in Git (`.env`, `kaggle.json`, tokens, passwords). Passwords are hashed.
 6. Ask before changing the model contract (section 4).
-7. Do not add any AI tool as author, co-author or credit in commits, PRs, README or file headers. The user must be the only visible contributor. Write plain commit messages with no trailers.
+7. Do not add any AI tool as author, co-author or credit in commits, PRs, README or file headers. The user must be the only visible contributor. Write plain commit messages with no trailers. ALWAYS commit and push as the user: before the first commit of any session (especially in web or cloud sessions, which default to an AI identity) set `git config user.name "Kayonga Elvis"` and `git config user.email "e.kayonga@alustudent.com"` (or the user's GitHub noreply email), and check `git log -1 --format="%an <%ae>"` before pushing. Never open pull requests from an AI-named branch with an AI author.
 8. Never `git push` without the user's explicit "push" in that message. Never store or echo a token the user pastes. Remind them to revoke it.
 9. Writing style for README and docs: plain English, ASCII only, no em dashes, no emojis.
 
@@ -85,7 +85,10 @@ frontend/
   src/styles.css          Design (teal theme, responsive)
   Dockerfile, package.json
 notebooks/skin_lesion_training.ipynb   Colab notebook (clean copy, NO outputs yet)
-notebooks/phase1_export_logits.ipynb   Colab notebook (added by PR #1, not yet run): rebuilds and verifies the original split, saves it as CSV, exports raw MC Dropout logits for val and test (for later calibration). Trains nothing.
+notebooks/phase1_export_logits.ipynb   Colab notebook (added by PR #1, RUN by the user on 2026-10-14): rebuilds and verifies the original split, saves it as CSV, exports raw MC Dropout logits for val and test (for later calibration). Trains nothing.
+docs/results/split_train.csv, split_val.csv, split_test.csv   Exact split (image_id, lesion_id, dx). Verified identical to the original run's class counts.
+docs/results/mc_logits_val.npz, mc_logits_test.npz   Raw logits, shape (n_images, 10 passes, 7), seed 1234. Used for calibration (temperature scaling) on a laptop.
+docs/results/export_info.json   split_seed 42, mc_seed 1234, mc_passes 10
 docs/figures/             Charts from the real run
 docs/results/             Metrics CSVs from the real run
 docs/Capstone_Proposal_Kayonga_Elvis.pdf   The capstone proposal (33 pages)
@@ -163,7 +166,7 @@ Training: EfficientNet-B3 14 epochs, MobileNetV2 10 epochs; AdamW lr 3e-4 wd 1e-
 5. MC Dropout is random: the same image can flag or not flag on different runs near the threshold.
 6. Small classes (df has 9 test images, vasc 21) give unreliable scores.
 7. The blur check is coarse (calibrated on 43 dermoscopy images, catches only severe blur).
-8. The sample images and screenshots may be training images (the reproduced split did not match the notebook's counts, so held-out images could not be identified). They show the interface, not accuracy.
+8. Two of the three sample images (ISIC_0031939, ISIC_0033609) were in the TRAINING set; ISIC_0030440 (melanoma) was in the held-out TEST set (checked against `docs/results/split_*.csv`). Single-image results and screenshots show the interface, not accuracy.
 9. Host storage is ephemeral on most free hosts: SQLite and saved images reset on restart. If a database persists but images do not, `GET /cases/{id}` fails because the heatmap file is missing (not handled yet).
 10. Public hosting would allow anyone to create sessions and upload. No rate limiting yet.
 11. Real webcam path is untested (only a fake camera in headless Edge).
@@ -192,7 +195,7 @@ Code changes to make when the host is chosen:
 - [ ] Update the README deployment section with the real steps and the live URLs.
 
 **C. Quality and science (later)**
-- [ ] Run `notebooks/phase1_export_logits.ipynb` in Colab (uploads `kaggle.json` and `backend/model/efficientnet_b3_best.pth`; about 2 min on a T4). It must pass its own split check (class counts equal `docs/results/split_class_counts.csv`) and its test accuracy check (about 83.5%). Download `phase1_out.zip` (split CSVs and `mc_logits_val.npz`, `mc_logits_test.npz`). Do not commit the zip.
+- [x] Phase 1 export run in Colab; outputs are in `docs/results/` and verified (class counts identical to the original run, zero lesion overlap, logits shapes and image order match the split, mean-logit test accuracy 0.8307 vs plain 0.8348).
 - [ ] Then, on a laptop: temperature scaling and re-choosing the entropy and melanoma thresholds on the validation logits only; report on test once. Goal: reduce overconfidence and improve the melanoma flag. Any change to `model_config.json` thresholds needs the user's approval (model contract).
 - [ ] Evaluate on a diverse external set with Fitzpatrick labels; report sensitivity by skin tone. Do not claim improvement until measured.
 - [ ] Investigate improving melanoma sensitivity (more data, calibration, better threshold search).
@@ -227,7 +230,14 @@ Entry format:
 - Verified by: what you ran or checked (build, smoke test, screenshot)
 ```
 
-### 2026-10-13 - Pulled PR #1 from GitHub, recorded the Phase 1 notebook (git: f95c3b1 pulled; this entry is a local commit)
+### 2026-10-14 - Added and verified the Phase 1 outputs; README sample-image wording made exact (git: pushed, see top line)
+- The user ran the Phase 1 notebook and placed its outputs in `docs/results/` (3 split CSVs, 2 logits files, export_info.json; under 1 MB in total, no file paths or personal data).
+- Verified before committing: class counts equal the original run, no lesion overlap between splits, logits are finite with shape (n, 10, 7) and image order equals the split, quick accuracy from mean logits 0.8498 val / 0.8307 test.
+- Used the split to find where the sample images sit: two were training images, one was a test image. Updated README (3 places) and known issue 8 to say so exactly.
+- Files: docs/results/split_*.csv, docs/results/mc_logits_*.npz, docs/results/export_info.json, README.md, PROJECT_STATUS.md
+- Verified by: script check of the files and `git status`; push done as the user (git identity Kayonga Elvis, no trailers).
+
+### 2026-10-13 - Pulled PR #1 from GitHub, recorded the Phase 1 notebook (git: f95c3b1 pulled; committed locally, pushed on 2026-10-14)
 - Fast-forwarded local main from 614659f to f95c3b1. New: `notebooks/phase1_export_logits.ipynb` (7 cells, no outputs), created in a separate web AI session on an AI-created branch and merged by the user as PR #1.
 - Read the notebook before accepting it: it trains nothing, verifies the split and checkpoint, exports MC Dropout logits; no secrets (it only tells the user to upload `kaggle.json` in Colab).
 - Flagged known issue 13: commit 27c7159 is authored by an AI account, visible in Contributors; user decision pending.
