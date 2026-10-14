@@ -1,6 +1,6 @@
 # PROJECT STATUS (living document for AI coding assistants)
 
-Last updated: 2026-10-14 | Updated by: AI assistant (added and verified Phase 1 outputs, pushed as the user) | Git: main, pushed to GitHub on 2026-10-14; run `git log --oneline -n 5` for the exact head
+Last updated: 2026-10-14 | Updated by: AI assistant (Phase 1 calibration done, Phase 2 prep, come-back list and dark-skin priority recorded) | Git: branch claude/zen-ride-wk9tv0; run `git log --oneline -n 5` for the exact head
 
 ---
 
@@ -202,6 +202,21 @@ Code changes to make when the host is chosen:
 - [ ] Add export of split ids in the notebook so held-out sample images can be identified.
 - [ ] Add automated tests (API smoke tests, quality-check unit tests).
 
+**D. Things we need to come back to (parked on 2026-10-14; the current priority is E below)**
+Goal of this list: a safer melanoma model with trustworthy probabilities, measured honestly.
+- [x] Phase 1 calibration: T = 2.017, melanoma target 90%, written to `model_config.json` (new fields only). Test ECE 0.095 to 0.021; melanoma sensitivity counting a flag 88.4% to 91.8%; top-class melanoma sensitivity unchanged at 55.5% (calibration cannot change it).
+- [ ] Phase 2: run `notebooks/phase2_prepare_isic2019.ipynb` in Colab, send back `dup_candidates.csv`, `dup_summary.json` and the printed licence text; then remove true duplicates from `docs/results/split2_train.csv`. SCC is dropped (user decision). Val stays the original HAM10000 val (open question: add a BCN/MSK slice to val?).
+- [ ] Phase 3: config-driven training notebook with an ablation table (`docs/results/ablation.csv`): (1) reference, (2) + ISIC 2019, (3) label smoothing, (4) class-balanced sampling or focal loss, (5) stronger augmentation + hair removal, (6) TTA, (7) optional second backbone + ensemble. One change per run; select on validation macro-F1 and melanoma safety; report test once.
+- [ ] Phase 5: load temperature and thresholds in `backend/app/ml.py` (same order: scale each pass, softmax, then average), API tests, README Results with real numbers only, `docs/EXPLAIN_CHANGES.md`.
+- [ ] Phase 4 (Derm Foundation embeddings) skipped by the user; revisit only if asked.
+- [ ] History rewrite done 2026-10-14: the only Claude-authored commit was re-authored to the user and `main` force-pushed. Check the GitHub Contributors list shows only the user after about a day.
+- Caveat to remember: 146 test melanomas only, so differences of a few points between runs can be noise.
+
+**E. Priority now: dark skin (Fitzpatrick V to VI)**
+Honest framing: today the model has never seen dark skin and is trained on dermoscopy images; nothing may be claimed until measured. See the plan in the 2026-10-14 changelog entry.
+- [ ] Measure first: build an external evaluation set with Fitzpatrick labels (candidates: Diverse Dermatology Images, 207 images of FST V-VI; licence and terms must be read by the user before use) and report sensitivity by skin tone.
+- [ ] Then decide how to adapt (fine-tune, domain adaptation, collect local data with consent) based on the measured gap.
+
 ---
 
 ## 8. Decisions and reasons (add new ones; never silently reverse one)
@@ -229,6 +244,12 @@ Entry format:
 - Files: path1, path2
 - Verified by: what you ran or checked (build, smoke test, screenshot)
 ```
+
+### 2026-10-14 - Come-back list and dark-skin priority recorded (git: uncommitted)
+- Parked the Phase 2 to 5 plan in section 7D; made dark-skin measurement the current priority (section 7E).
+- Facts checked on the web (licence text NOT verified): DDI has 656 biopsy-proven images, 207 of them FST V-VI (48 malignant); Fitzpatrick17k has 16,577 web-sourced clinical images skewed to light skin; PAD-UFES-20 is smartphone data with Fitzpatrick labels for only some patients and mostly lighter tones.
+- Files: PROJECT_STATUS.md
+- Verified by: reading the section back; no code changed.
 
 ### 2026-10-14 - Added and verified the Phase 1 outputs; README sample-image wording made exact (git: pushed, see top line)
 - The user ran the Phase 1 notebook and placed its outputs in `docs/results/` (3 split CSVs, 2 logits files, export_info.json; under 1 MB in total, no file paths or personal data).
