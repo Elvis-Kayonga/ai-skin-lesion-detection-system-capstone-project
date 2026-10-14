@@ -1,6 +1,6 @@
 # PROJECT STATUS (living document for AI coding assistants)
 
-Last updated: 2026-10-14 | Updated by: AI assistant (added and verified Phase 1 outputs, pushed as the user) | Git: main, pushed to GitHub on 2026-10-14; run `git log --oneline -n 5` for the exact head
+Last updated: 2026-10-14 | Updated by: AI assistant (hardened .gitignore, pushed as the user) | Git: main, pushed to GitHub on 2026-10-14; run `git log --oneline -n 5` for the exact head
 
 ---
 
@@ -216,6 +216,7 @@ Code changes to make when the host is chosen:
 - **D8. AI tooling files are kept out of Git** (local exclude) so only the author is visible. This file uses a neutral name on purpose, and tracked files must not name AI tools.
 - **D9. Frontend on Vercel, API on a separate host,** because the model does not fit serverless limits. Camera access requires HTTPS, which both provide.
 - **D10. Screenshots use real HAM10000 images and say they may be training images.** They show the interface, not accuracy.
+- **D12. `.gitignore` ignores every `.env.*` variant, `*.pem` and `*.key`, but keeps `.env.example` templates tracked.** Before this, only a file named exactly `.env` was ignored, so `.env.local` or `.env.production` could have been committed by accident. Verified with `git check-ignore`. Rule for AIs: never write a token or password into any file, `.env` included; use a one-off command-line header for pushes.
 - **D11. The user deleted `docs/DEMO_SCRIPT.md` from the repo on GitHub (commit 937e5c1).** Treat the script as intentionally removed. Do not recreate it in the repo. It remains in git history (commit a275443) if needed.
 
 ---
@@ -229,6 +230,11 @@ Entry format:
 - Files: path1, path2
 - Verified by: what you ran or checked (build, smoke test, screenshot)
 ```
+
+### 2026-10-14 - Hardened .gitignore for secrets (git: pushed, see top line)
+- Audited the repo and all history first: no `.env`, `kaggle.json` or token was ever committed; the tracked `.env.example` files are empty templates. Found one gap (only an exact `.env` was ignored) and fixed it, see D12.
+- Files: .gitignore, PROJECT_STATUS.md
+- Verified by: `git check-ignore` on 8 files that must be ignored and 4 that must not; `git ls-files -ci --exclude-standard` returned nothing (no tracked file became ignored).
 
 ### 2026-10-14 - Added and verified the Phase 1 outputs; README sample-image wording made exact (git: pushed, see top line)
 - The user ran the Phase 1 notebook and placed its outputs in `docs/results/` (3 split CSVs, 2 logits files, export_info.json; under 1 MB in total, no file paths or personal data).
