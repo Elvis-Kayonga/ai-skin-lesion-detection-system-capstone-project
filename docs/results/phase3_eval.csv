@@ -1,0 +1,9 @@
+n,patients_or_groups,accuracy,accuracy_ci95,macro_f1,macro_f1_ci95,melanoma_sensitivity,melanoma_sensitivity_ci95,high_risk_sensitivity,high_risk_sensitivity_ci95,high_risk_sensitivity_with_flag,high_risk_sensitivity_with_flag_ci95,review_flag_rate,review_flag_rate_ci95,model,eval_set,false_alarm_high_risk_rate,false_alarm_high_risk_rate_ci95,false_alarm_melanoma_rate,false_alarm_melanoma_rate_ci95
+1441,1067,0.8348,"[0.8107, 0.8587]",0.7322,"[0.6583, 0.7778]",0.5753,"[0.4855, 0.6667]",0.7807,"[0.7194, 0.839]",0.9442,"[0.9073, 0.9729]",0.3192,"[0.292, 0.3491]",original,HAM10000 test,,,,
+308,186,0.3409,"[0.2776, 0.4033]",0.2621,"[0.2085, 0.3119]",0.0,"[0.0, 0.0]",0.5364,"[0.4525, 0.6101]",0.8,"[0.7399, 0.8586]",0.5422,"[0.4849, 0.5976]",original,PAD-UFES-20 test (phone photos),,,,
+410,21,,,,,,,,,,,0.5341,"[0.4758, 0.5931]",original,Dark skin V-VI benign (ISIC/MSK),0.0171,"[0.0047, 0.0381]",0.0171,"[0.0047, 0.0381]"
+48,48,0.2708,"[0.1458, 0.3958]",0.3075,"[0.115, 0.4413]",0.3333,"[0.125, 0.5714]",0.5556,"[0.409, 0.6978]",0.9333,"[0.8511, 1.0]",0.875,"[0.7708, 0.9583]",original,Dark skin V-VI labelled (Fitzpatrick17k),,,,
+1441,1067,0.8348,"[0.8114, 0.8555]",0.7077,"[0.629, 0.7624]",0.637,"[0.5472, 0.7257]",0.7918,"[0.7287, 0.8459]",0.8922,"[0.8524, 0.9296]",0.2762,"[0.2493, 0.3032]",fine-tuned,HAM10000 test,,,,
+308,186,0.8019,"[0.7544, 0.8471]",0.7653,"[0.6261, 0.8388]",0.75,"[0.5, 1.0]",0.9636,"[0.9378, 0.9862]",0.9909,"[0.9763, 1.0]",0.2955,"[0.2421, 0.3503]",fine-tuned,PAD-UFES-20 test (phone photos),,,,
+410,21,,,,,,,,,,,0.5951,"[0.5323, 0.665]",fine-tuned,Dark skin V-VI benign (ISIC/MSK),0.3122,"[0.2646, 0.3604]",0.022,"[0.0069, 0.0458]"
+48,48,0.25,"[0.1453, 0.3547]",0.1277,"[0.0814, 0.1636]",0.0,"[0.0, 0.0]",0.7333,"[0.5909, 0.8636]",0.8889,"[0.7872, 0.9778]",0.4792,"[0.3333, 0.6042]",fine-tuned,Dark skin V-VI labelled (Fitzpatrick17k),,,,

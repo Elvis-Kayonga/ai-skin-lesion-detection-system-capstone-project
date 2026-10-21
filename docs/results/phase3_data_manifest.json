@@ -1,0 +1,87 @@
+{
+  "ham_train": {
+    "n": 7116,
+    "classes": {
+      "nv": 4796,
+      "mel": 782,
+      "bkl": 772,
+      "bcc": 358,
+      "akiec": 230,
+      "df": 89,
+      "vasc": 89
+    }
+  },
+  "ham_val": {
+    "n": 1458,
+    "classes": {
+      "nv": 935,
+      "mel": 185,
+      "bkl": 159,
+      "bcc": 67,
+      "akiec": 63,
+      "vasc": 32,
+      "df": 17
+    }
+  },
+  "ham_test": {
+    "n": 1441,
+    "classes": {
+      "nv": 974,
+      "bkl": 168,
+      "mel": 146,
+      "bcc": 89,
+      "akiec": 34,
+      "vasc": 21,
+      "df": 9
+    }
+  },
+  "pad_train": {
+    "n": 1494,
+    "classes": {
+      "bcc": 606,
+      "akiec": 526,
+      "bkl": 164,
+      "nv": 155,
+      "mel": 43
+    }
+  },
+  "pad_val": {
+    "n": 304,
+    "classes": {
+      "bcc": 122,
+      "akiec": 105,
+      "bkl": 36,
+      "nv": 36,
+      "mel": 5
+    }
+  },
+  "pad_test": {
+    "n": 308,
+    "classes": {
+      "bcc": 117,
+      "akiec": 99,
+      "nv": 53,
+      "bkl": 35,
+      "mel": 4
+    }
+  },
+  "dark_benign_test": {
+    "n": 410,
+    "classes": "benign (no class)"
+  },
+  "dark_fitz17k_test": {
+    "n": 48,
+    "classes": {
+      "bcc": 24,
+      "mel": 18,
+      "akiec": 3,
+      "vasc": 3
+    }
+  },
+  "licences": {
+    "HAM10000": "CC BY-NC 4.0",
+    "PAD-UFES-20": "CC BY (Pacheco et al. 2020, ISIC collection 406)",
+    "ISIC Fitzpatrick V-VI (MSK)": "CC BY (Memorial Sloan Kettering Cancer Center)",
+    "Fitzpatrick17k": "CC BY-NC-SA 3.0 (Groh et al. 2021)"
+  }
+}

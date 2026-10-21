@@ -1,0 +1,135 @@
+{
+  "promote": false,
+  "checks": {
+    "HAM macro-F1 not worse": false,
+    "HAM melanoma sens. not worse": true,
+    "PAD macro-F1 improved": true,
+    "dark-skin false alarms not up": false
+  },
+  "finetuned_thresholds": [
+    0.2857484519481659,
+    0.05
+  ],
+  "original_thresholds": [
+    0.4129127562046051,
+    0.05
+  ],
+  "config": {
+    "seed": 42,
+    "class_codes": [
+      "akiec",
+      "bcc",
+      "bkl",
+      "df",
+      "mel",
+      "nv",
+      "vasc"
+    ],
+    "high_risk": [
+      "akiec",
+      "bcc",
+      "mel"
+    ],
+    "input_size": 300,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "pad_share": 0.4,
+    "pad_folds": 7,
+    "epochs": 8,
+    "patience": 3,
+    "batch_size": 32,
+    "lr_backbone": 0.0001,
+    "lr_head": 0.0003,
+    "weight_decay": 0.0001,
+    "mc_passes": 10,
+    "mc_seed": 1234,
+    "entropy_percentile": 80.0,
+    "mel_recall_target": 0.9,
+    "bootstrap": 1000,
+    "promote": {
+      "ham_macro_f1_drop": 0.01,
+      "ham_mel_sens_drop": 0.03,
+      "dark_false_alarm_rise": 0.02
+    },
+    "max_per_source": null,
+    "workers": 16,
+    "num_workers": 2
+  },
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.5188440320438612,
+      "val_macro_f1_ham": 0.7217054593147141,
+      "val_macro_f1_pad": 0.6126029223694593,
+      "val_score": 0.6671541908420867
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.2744671882556052,
+      "val_macro_f1_ham": 0.7229383013193341,
+      "val_macro_f1_pad": 0.6587521032426693,
+      "val_score": 0.6908452022810017
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.04410354088477749,
+      "val_macro_f1_ham": 0.7470054467514659,
+      "val_macro_f1_pad": 0.6431018723278785,
+      "val_score": 0.6950536595396721
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.006433439551165403,
+      "val_macro_f1_ham": 0.7536526699883905,
+      "val_macro_f1_pad": 0.6951305736115863,
+      "val_score": 0.7243916217999884
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.00111528503738078,
+      "val_macro_f1_ham": 0.7489635435715764,
+      "val_macro_f1_pad": 0.6915066274182948,
+      "val_score": 0.7202350854949355
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.0005089237892305215,
+      "val_macro_f1_ham": 0.7516814671269542,
+      "val_macro_f1_pad": 0.6833359359670492,
+      "val_score": 0.7175087015470016
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.00039454166125625173,
+      "val_macro_f1_ham": 0.7516814671269542,
+      "val_macro_f1_pad": 0.6833359359670492,
+      "val_score": 0.7175087015470016
+    }
+  ],
+  "honest_scope": "Dark-skin results cover benign false alarms (few patients) and a small Fitzpatrick17k sample. They do not show cancer-detection performance on Fitzpatrick V-VI.",
+  "finetuned_ham_test_metrics": {
+    "accuracy": 0.8348369188063844,
+    "macro_precision": 0.7400274721680162,
+    "macro_recall": 0.6909855905408974,
+    "macro_f1": 0.707716237248165,
+    "macro_auc_ovr": 0.955725230083441,
+    "melanoma_sensitivity": 0.636986301369863
+  },
+  "finetuned_ham_mission_metrics": {
+    "mc_accuracy": 0.8341429562803608,
+    "review_rate": 0.2761970853573907,
+    "accuracy_unflagged": 0.9386385426653883,
+    "accuracy_flagged": 0.5603015075376885,
+    "errors_caught_by_flag": 0.7322175732217573,
+    "melanoma_sensitivity_argmax": 0.6575342465753424,
+    "melanoma_sensitivity_with_flag": 0.8082191780821918
+  }
+}

@@ -172,6 +172,32 @@ The model's probabilities are overconfident, so a follow-up experiment fitted on
 
 The trade-off is more alerts, and about 2 in 3 melanoma alerts at the 90% target are false alarms. The "before" figures here come from re-measuring on exported logits, so they differ slightly from the table above, because the uncertainty method is random. **The running app still uses the original thresholds.** The new values are stored as extra fields in `backend/model/model_config.json` and are not wired in yet.
 
+### Fine-tuning on public data and testing on dark skin (experiment, not used by the app)
+
+The app's target users have dark skin, and the training data is mostly light skin. So I tested what public data can and cannot fix. The notebook is `notebooks/phase3_finetune_public.ipynb`, and it was run on a Kaggle T4 GPU. It fine-tuned the model on HAM10000 plus **PAD-UFES-20**: 2,298 smartphone photos from Brazil, mostly Fitzpatrick I to III, CC BY licence. Then it compared the original and the fine-tuned model on four held-out sets. Dark-skin images were used **only for testing**, never for training. Numbers are from `docs/results/phase3_eval.csv`, with 95% confidence intervals resampled by patient or lesion.
+
+| Test set | Measure | Original | Fine-tuned |
+|---|---|---|---|
+| HAM10000 test (1,441 dermoscopy images) | Macro F1 | 0.732 | 0.708 |
+| | Melanoma sensitivity | 57.5% | 63.7% |
+| PAD-UFES-20 test (308 phone photos, 186 patients) | Accuracy | 34.1% | **80.2%** |
+| | Macro F1 | 0.262 | **0.765** |
+| | Pre-cancer and cancer sensitivity (akiec, bcc, mel) | 53.6% | **96.4%** |
+| Dark skin, benign (410 lesions, Fitzpatrick V to VI, 21 patients, ISIC Archive) | Benign lesions wrongly called pre-cancer or cancer | 1.7% | **31.2%** |
+| Dark skin, labelled (48 images, Fitzpatrick V to VI, Fitzpatrick17k) | Accuracy | 27.1% | 25.0% |
+| | Melanoma sensitivity (18 melanomas) | 33.3% | **0%** |
+
+![Original vs fine-tuned](docs/figures/fig_phase3_comparison.png)
+
+What this shows:
+
+1. **The original model fails on phone photos.** It gets 34% accuracy on ordinary smartphone pictures, against 83.5% on dermoscopy images. Adding phone photos to training fixes most of that, reaching 80%.
+2. **Both models perform poorly on dark skin.** The original model got 27% of the dark-skin labelled images right.
+3. **Adding more light-skin data made dark skin worse, not better.** After fine-tuning, the model wrongly called **31% of benign dark-skin lesions** pre-cancer or cancer, against 1.7% before. It also recognised **none of the 18 dark-skin melanomas** as melanoma. This is direct evidence that the fix for dark skin is data from dark-skinned patients, not more data of the same kind.
+4. **The fine-tuned model was therefore not deployed.** A rule written before the run required no loss on the original test set and no rise in dark-skin false alarms. It failed both. The app still runs the original model.
+
+Caveats: the dark-skin sets are small. One has 48 images, and the other has 410 lesions from only 21 patients and a single hospital. The Fitzpatrick17k images are web-sourced clinical photos with some label noise. PAD-UFES-20's test set contains only 4 melanomas. This was a single training run. The results are evidence about the gap, not a final measurement of it.
+
 ### Charts
 
 | | |
