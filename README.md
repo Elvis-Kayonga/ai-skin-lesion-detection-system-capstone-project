@@ -159,6 +159,19 @@ The app runs the classifier 10 times with dropout switched on (MC Dropout) and a
 
 In plain words: the flag works as a useful warning. The model is much more accurate on images it is not worried about. But even with the flag, about 1 in 8 melanomas in the test set was neither correctly named nor flagged.
 
+### Calibration experiment (not yet used by the app)
+
+The model's probabilities are overconfident, so a follow-up experiment fitted one "temperature" number (2.017, on the validation set only) to make them honest, and re-chose the review thresholds. The code is in `backend/app/calibration.py` and `backend/scripts/calibrate.py`, with unit tests in `backend/tests/`, and the numbers are in `docs/results/calibration_results.json`.
+
+| Test set | Before | After |
+|---|---|---|
+| Calibration error (ECE, lower is better) | 0.095 | 0.021 |
+| Accuracy | 83.2% | 83.1% |
+| Melanoma sensitivity, counting a flag as a catch | 88.4% | 91.8% |
+| Share of images flagged for review | 31.9% | 35.8% |
+
+The trade-off is more alerts, and about 2 in 3 melanoma alerts at the 90% target are false alarms. The "before" figures here come from re-measuring on exported logits, so they differ slightly from the table above, because the uncertainty method is random. **The running app still uses the original thresholds.** The new values are stored as extra fields in `backend/model/model_config.json` and are not wired in yet.
+
 ### Charts
 
 | | |

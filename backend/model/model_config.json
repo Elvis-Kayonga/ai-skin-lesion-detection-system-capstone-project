@@ -51,5 +51,50 @@
     "melanoma_sensitivity_with_flag": 0.8767123287671232
   },
   "disclaimer": "Decision-support prototype only. Not a diagnosis. Consult a qualified clinician.",
-  "limitations": "Trained on HAM10000 (no skin-tone labels, mostly lighter skin). Not validated on Fitzpatrick V-VI."
+  "limitations": "Trained on HAM10000 (no skin-tone labels, mostly lighter skin). Not validated on Fitzpatrick V-VI.",
+  "temperature": 2.017213437559227,
+  "calibrated_entropy_threshold": 0.8181522488594055,
+  "calibrated_melanoma_threshold": 0.12161377817392349,
+  "calibration": {
+    "fitted_on": "validation",
+    "target_melanoma_sensitivity": 0.9,
+    "mc_seed": 1234,
+    "mc_passes": 10,
+    "before_after_test": {
+      "old (T=1, old thresholds)": {
+        "accuracy": 0.8320610687022901,
+        "flag_rate": 0.3192227619708536,
+        "accuracy_unflagged": 0.9378185524974516,
+        "accuracy_flagged": 0.6065217391304348,
+        "share_of_mistakes_flagged": 0.7479338842975206,
+        "melanoma_sensitivity_top_class": 0.5547945205479452,
+        "melanoma_sensitivity_with_flag": 0.8835616438356164,
+        "melanoma_specificity_top_class": 0.9359073359073359,
+        "melanoma_specificity_unflagged": 0.7444015444015444
+      },
+      "new (T=2.02, target 90%)": {
+        "accuracy": 0.8306731436502429,
+        "flag_rate": 0.35808466342817485,
+        "accuracy_unflagged": 0.9524324324324325,
+        "accuracy_flagged": 0.6124031007751938,
+        "share_of_mistakes_flagged": 0.819672131147541,
+        "melanoma_sensitivity_top_class": 0.5547945205479452,
+        "melanoma_sensitivity_with_flag": 0.9178082191780822,
+        "melanoma_specificity_top_class": 0.9359073359073359,
+        "melanoma_specificity_unflagged": 0.705019305019305
+      }
+    },
+    "ece": {
+      "before": {
+        "ece": 0.09462466722226326,
+        "nll": 0.6282325983047485,
+        "accuracy": 0.8320610687022901
+      },
+      "after": {
+        "ece": 0.021434471641953504,
+        "nll": 0.4812374711036682,
+        "accuracy": 0.8306731436502429
+      }
+    }
+  }
 }

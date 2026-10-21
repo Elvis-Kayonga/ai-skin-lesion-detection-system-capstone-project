@@ -1,0 +1,101 @@
+{
+  "temperature": 2.017213437559227,
+  "mc_seed": 1234,
+  "mc_passes": 10,
+  "n_val": 1458,
+  "n_test": 1441,
+  "calibration": {
+    "val": {
+      "before": {
+        "ece": 0.07934866248743688,
+        "nll": 0.5844699740409851,
+        "accuracy": 0.8511659807956105
+      },
+      "after": {
+        "ece": 0.013618187444854365,
+        "nll": 0.45131435990333557,
+        "accuracy": 0.8511659807956105
+      }
+    },
+    "test": {
+      "before": {
+        "ece": 0.09462466722226326,
+        "nll": 0.6282325983047485,
+        "accuracy": 0.8320610687022901
+      },
+      "after": {
+        "ece": 0.021434471641953504,
+        "nll": 0.4812374711036682,
+        "accuracy": 0.8306731436502429
+      }
+    }
+  },
+  "melanoma_table": [
+    {
+      "target": 0.85,
+      "threshold": 0.17942248284816742,
+      "val_sens": 0.8540540540540541,
+      "val_spec": 0.8593872741555381,
+      "val_alert": 0.23113854595336078,
+      "val_prec": 0.4688427299703264,
+      "test_sens": 0.8356164383561644,
+      "test_spec": 0.8293436293436294,
+      "test_alert": 0.238029146426093,
+      "test_prec": 0.3556851311953353
+    },
+    {
+      "target": 0.9,
+      "threshold": 0.12161377817392349,
+      "val_sens": 0.9027027027027027,
+      "val_spec": 0.8091123330714847,
+      "val_alert": 0.2812071330589849,
+      "val_prec": 0.4073170731707317,
+      "test_sens": 0.8972602739726028,
+      "test_spec": 0.7776061776061776,
+      "test_alert": 0.2907702984038862,
+      "test_prec": 0.3126491646778043
+    },
+    {
+      "target": 0.95,
+      "threshold": 0.07585131376981735,
+      "val_sens": 0.9513513513513514,
+      "val_spec": 0.7446975648075412,
+      "val_alert": 0.3436213991769547,
+      "val_prec": 0.35129740518962077,
+      "test_sens": 0.9178082191780822,
+      "test_spec": 0.7312741312741313,
+      "test_alert": 0.33448993754337264,
+      "test_prec": 0.27800829875518673
+    }
+  ],
+  "chosen_target": 0.9,
+  "thresholds": {
+    "entropy": 0.8181522488594055,
+    "entropy_percentile": 80.0,
+    "melanoma": 0.12161377817392349
+  },
+  "review_flag_test": {
+    "old (T=1, old thresholds)": {
+      "accuracy": 0.8320610687022901,
+      "flag_rate": 0.3192227619708536,
+      "accuracy_unflagged": 0.9378185524974516,
+      "accuracy_flagged": 0.6065217391304348,
+      "share_of_mistakes_flagged": 0.7479338842975206,
+      "melanoma_sensitivity_top_class": 0.5547945205479452,
+      "melanoma_sensitivity_with_flag": 0.8835616438356164,
+      "melanoma_specificity_top_class": 0.9359073359073359,
+      "melanoma_specificity_unflagged": 0.7444015444015444
+    },
+    "new (T=2.02, target 90%)": {
+      "accuracy": 0.8306731436502429,
+      "flag_rate": 0.35808466342817485,
+      "accuracy_unflagged": 0.9524324324324325,
+      "accuracy_flagged": 0.6124031007751938,
+      "share_of_mistakes_flagged": 0.819672131147541,
+      "melanoma_sensitivity_top_class": 0.5547945205479452,
+      "melanoma_sensitivity_with_flag": 0.9178082191780822,
+      "melanoma_specificity_top_class": 0.9359073359073359,
+      "melanoma_specificity_unflagged": 0.705019305019305
+    }
+  }
+}
