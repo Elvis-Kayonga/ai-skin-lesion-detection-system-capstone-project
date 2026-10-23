@@ -16,3 +16,6 @@ data/
 .ipynb_checkpoints/
 *_checkpoint.pt
 kaggle.json
+frontend/test-results/
+frontend/playwright-report/
+frontend/blob-report/
