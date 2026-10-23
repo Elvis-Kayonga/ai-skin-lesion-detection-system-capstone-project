@@ -28,7 +28,9 @@ class Settings(BaseSettings):
     blur_threshold: float = 5.0
     sharpness_side_px: int = 512
 
-    model_version: str = "efficientnet_b3-v0"
+    # The deployed model is the dark-skin fine-tune from Phase 4b. The original HAM10000-only model is kept in
+    # model/original: set MODEL_DIR=model/original and MODEL_VERSION=efficientnet_b3-v0 to run it instead.
+    model_version: str = "efficientnet_b3-v1-darkskin"
     # "cpu" (default, works everywhere) or "cuda" to run the model on an NVIDIA GPU when one is available.
     device: str = "cpu"
     # Run one throw-away prediction at start-up so the first real user does not pay the one-off set-up cost.

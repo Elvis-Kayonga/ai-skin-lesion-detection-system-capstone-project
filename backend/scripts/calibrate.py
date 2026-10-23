@@ -26,7 +26,8 @@ class Config:
     """Every number used by this script lives here (no magic numbers elsewhere)."""
     results_dir: Path = REPO / "docs" / "results"
     figures_dir: Path = REPO / "docs" / "figures"
-    model_config: Path = REPO / "backend" / "model" / "model_config.json"
+    # The exported logits come from the original HAM10000-only model, so its config is the one to update.
+    model_config: Path = REPO / "backend" / "model" / "original" / "model_config.json"
     targets: tuple = (0.85, 0.90, 0.95)       # melanoma sensitivity targets shown in the table
     target: float = 0.90                       # the one written to model_config.json
     entropy_percentile: float = 80.0           # same recipe as the training notebook

@@ -1,0 +1,100 @@
+{
+  "model_name": "efficientnet_b3",
+  "input_size": 300,
+  "mean": [
+    0.485,
+    0.456,
+    0.406
+  ],
+  "std": [
+    0.229,
+    0.224,
+    0.225
+  ],
+  "class_codes": [
+    "akiec",
+    "bcc",
+    "bkl",
+    "df",
+    "mel",
+    "nv",
+    "vasc"
+  ],
+  "class_names": [
+    "Actinic keratoses / intraepithelial carcinoma",
+    "Basal cell carcinoma",
+    "Benign keratosis-like lesions",
+    "Dermatofibroma",
+    "Melanoma",
+    "Melanocytic nevi",
+    "Vascular lesions"
+  ],
+  "mc_dropout_passes": 10,
+  "entropy_threshold": 0.4129127562046051,
+  "melanoma_flag_threshold": 0.05,
+  "melanoma_index": 4,
+  "test_metrics": {
+    "accuracy": 0.8348369188063844,
+    "macro_precision": 0.7309925050234728,
+    "macro_recall": 0.7431207114540728,
+    "macro_f1": 0.732192342518835,
+    "macro_auc_ovr": 0.963228705361824,
+    "melanoma_sensitivity": 0.5753424657534246
+  },
+  "mission_metrics": {
+    "mc_accuracy": 0.835530881332408,
+    "review_rate": 0.31297709923664124,
+    "accuracy_unflagged": 0.9353535353535354,
+    "accuracy_flagged": 0.6164079822616408,
+    "errors_caught_by_flag": 0.729957805907173,
+    "melanoma_sensitivity_argmax": 0.6095890410958904,
+    "melanoma_sensitivity_with_flag": 0.8767123287671232
+  },
+  "disclaimer": "Decision-support prototype only. Not a diagnosis. Consult a qualified clinician.",
+  "limitations": "Trained on HAM10000 (no skin-tone labels, mostly lighter skin). Not validated on Fitzpatrick V-VI.",
+  "temperature": 2.017213437559227,
+  "calibrated_entropy_threshold": 0.8181522488594055,
+  "calibrated_melanoma_threshold": 0.12161377817392349,
+  "calibration": {
+    "fitted_on": "validation",
+    "target_melanoma_sensitivity": 0.9,
+    "mc_seed": 1234,
+    "mc_passes": 10,
+    "before_after_test": {
+      "old (T=1, old thresholds)": {
+        "accuracy": 0.8320610687022901,
+        "flag_rate": 0.3192227619708536,
+        "accuracy_unflagged": 0.9378185524974516,
+        "accuracy_flagged": 0.6065217391304348,
+        "share_of_mistakes_flagged": 0.7479338842975206,
+        "melanoma_sensitivity_top_class": 0.5547945205479452,
+        "melanoma_sensitivity_with_flag": 0.8835616438356164,
+        "melanoma_specificity_top_class": 0.9359073359073359,
+        "melanoma_specificity_unflagged": 0.7444015444015444
+      },
+      "new (T=2.02, target 90%)": {
+        "accuracy": 0.8306731436502429,
+        "flag_rate": 0.35808466342817485,
+        "accuracy_unflagged": 0.9524324324324325,
+        "accuracy_flagged": 0.6124031007751938,
+        "share_of_mistakes_flagged": 0.819672131147541,
+        "melanoma_sensitivity_top_class": 0.5547945205479452,
+        "melanoma_sensitivity_with_flag": 0.9178082191780822,
+        "melanoma_specificity_top_class": 0.9359073359073359,
+        "melanoma_specificity_unflagged": 0.705019305019305
+      }
+    },
+    "ece": {
+      "before": {
+        "ece": 0.09462466722226326,
+        "nll": 0.6282325983047485,
+        "accuracy": 0.8320610687022901
+      },
+      "after": {
+        "ece": 0.021434471641953504,
+        "nll": 0.4812374711036682,
+        "accuracy": 0.8306731436502429
+      }
+    }
+  }
+}
