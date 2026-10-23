@@ -1,0 +1,91 @@
+{
+  "promote": false,
+  "checks": {
+    "HAM macro-F1 not worse": true,
+    "HAM melanoma sens. not worse": true,
+    "dark-skin accuracy improved": true,
+    "dark-skin high-risk catch not down": true,
+    "ISIC dark-skin false alarms not up": false
+  },
+  "finetuned_thresholds": [
+    0.4633959233760834,
+    0.05
+  ],
+  "original_thresholds": [
+    0.4129127562046051,
+    0.05
+  ],
+  "config": {
+    "seed": 42,
+    "class_codes": [
+      "akiec",
+      "bcc",
+      "bkl",
+      "df",
+      "mel",
+      "nv",
+      "vasc"
+    ],
+    "high_risk": [
+      "akiec",
+      "bcc",
+      "mel"
+    ],
+    "input_size": 300,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "dark_fitz_types": [
+      4,
+      5,
+      6
+    ],
+    "folds": 5,
+    "epochs": 6,
+    "samples_per_epoch": 3000,
+    "dark_share": 0.3,
+    "batch_size": 32,
+    "lr_backbone": 0.0001,
+    "lr_head": 0.0003,
+    "weight_decay": 0.0001,
+    "mc_passes": 10,
+    "mc_seed": 1234,
+    "entropy_percentile": 80.0,
+    "mel_recall_target": 0.9,
+    "bootstrap": 1000,
+    "promote": {
+      "ham_macro_f1_drop": 0.01,
+      "ham_mel_sens_drop": 0.03,
+      "dark_false_alarm_rise": 0.02,
+      "dark_hr_flag_drop": 0.0
+    },
+    "max_per_source": null,
+    "workers": 16,
+    "num_workers": 2
+  },
+  "finetuned_ham_test_metrics": {
+    "accuracy": 0.8285912560721721,
+    "macro_precision": 0.7401030406220418,
+    "macro_recall": 0.7507027654940323,
+    "macro_f1": 0.7406113408008232,
+    "macro_auc_ovr": 0.9599061873137498,
+    "melanoma_sensitivity": 0.5753424657534246
+  },
+  "finetuned_ham_mission_metrics": {
+    "mc_accuracy": 0.8278972935461485,
+    "review_rate": 0.33657182512144346,
+    "accuracy_unflagged": 0.9435146443514645,
+    "accuracy_flagged": 0.6,
+    "errors_caught_by_flag": 0.782258064516129,
+    "melanoma_sensitivity_argmax": 0.5821917808219178,
+    "melanoma_sensitivity_with_flag": 0.863013698630137
+  },
+  "honest_scope": "Dark-skin training and test data is a small web-sourced Fitzpatrick17k sample (no patient ids, some label noise). Cross-validated results are indicative only. Not a validation for clinical use on dark skin."
+}

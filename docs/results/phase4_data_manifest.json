@@ -1,0 +1,38 @@
+{
+  "dark_fitz17k": {
+    "n": 139,
+    "classes": {
+      "bcc": 84,
+      "mel": 40,
+      "akiec": 8,
+      "vasc": 4,
+      "df": 3
+    },
+    "fitzpatrick": {
+      "4": 91,
+      "5": 39,
+      "6": 9
+    },
+    "folds": {
+      "0": 29,
+      "3": 28,
+      "1": 28,
+      "4": 27,
+      "2": 27
+    }
+  },
+  "dark_benign_test": {
+    "n": 410,
+    "patients": 21
+  },
+  "ham": {
+    "train": 7116,
+    "val": 1458,
+    "test": 1441
+  },
+  "licences": {
+    "HAM10000": "CC BY-NC 4.0",
+    "Fitzpatrick17k": "CC BY-NC-SA 3.0 (Groh et al. 2021)",
+    "ISIC Fitzpatrick V-VI (MSK)": "CC BY (Memorial Sloan Kettering Cancer Center)"
+  }
+}
