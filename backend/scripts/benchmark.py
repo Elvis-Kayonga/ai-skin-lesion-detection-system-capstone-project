@@ -76,8 +76,9 @@ def environment():
 class Server:
     """Starts uvicorn as a separate process with throw-away data folders."""
 
-    def __init__(self, port):
+    def __init__(self, port, device="cpu"):
         self.port = port
+        self.device = device
         self.url = f"http://127.0.0.1:{port}"
         self.tmp = Path(tempfile.mkdtemp(prefix="skin_bench_"))
 
@@ -85,7 +86,8 @@ class Server:
         env = {**os.environ,
                "SECRET_KEY": "benchmark-secret-key-that-is-long-enough-0123456789",
                "DATABASE_URL": f"sqlite:///{(self.tmp / 'bench.db').as_posix()}",
-               "STORAGE_DIR": str(self.tmp / "storage")}
+               "STORAGE_DIR": str(self.tmp / "storage"),
+               "DEVICE": self.device}
         t0 = time.perf_counter()
         self.proc = subprocess.Popen([sys.executable, "-m", "uvicorn", "app.main:app", "--port", str(self.port)],
                                      cwd=BACKEND, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -139,11 +141,12 @@ def main():
     ap.add_argument("--clients", type=int, default=4, help="concurrent clients")
     ap.add_argument("--per-client", type=int, default=3)
     ap.add_argument("--port", type=int, default=8020)
+    ap.add_argument("--device", default="cpu", choices=["cpu", "cuda"], help="where the server runs the model")
     args = ap.parse_args()
 
     data = SAMPLE.read_bytes()
-    server = Server(args.port)
-    out = {"label": args.label, "environment": environment(), "image": SAMPLE.name}
+    server = Server(args.port, args.device)
+    out = {"label": args.label, "model_device": args.device, "environment": environment(), "image": SAMPLE.name}
     try:
         out["startup_s"] = round(server.start(), 2)
         out["rss_after_startup_mb"] = server.rss_mb()

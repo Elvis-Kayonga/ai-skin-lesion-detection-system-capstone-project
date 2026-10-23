@@ -22,7 +22,7 @@ class AppContainer:
         self.settings = settings
         self.validator = ImageValidator.from_settings(settings)
         classifier = EfficientNetClassifier(settings.model_dir / settings.weights_file,
-                                            settings.model_dir / settings.config_file)
+                                            settings.model_dir / settings.config_file, device=settings.device)
         self.classifier: LesionClassifier = classifier
         self.explainer: Explainer = GradCamExplainer(classifier)
         self.store = ImageStore(settings.storage_dir)
