@@ -1,39 +1,41 @@
+"""Password hashing and login tokens."""
 from datetime import datetime, timedelta, timezone
 
 import jwt
-from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
-from sqlalchemy.orm import Session
 
-from .config import settings
-from .db import get_db
-from .models import User
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+from .core.errors import AuthenticationFailed
 
 
-def hash_password(password: str) -> str:
-    return pwd_context.hash(password)
+class PasswordHasher:
+    """bcrypt: slow on purpose and salted, so stolen hashes are hard to reverse."""
+
+    def __init__(self):
+        self._context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+    def hash(self, password: str) -> str:
+        return self._context.hash(password)
+
+    def verify(self, password: str, hashed: str) -> bool:
+        return self._context.verify(password, hashed)
 
 
-def verify_password(password: str, hashed: str) -> bool:
-    return pwd_context.verify(password, hashed)
+class TokenService:
+    """Signed JWT access tokens (HS256) that expire after a fixed time."""
 
+    ALGORITHM = "HS256"
+    INVALID = "Invalid or expired token"
 
-def create_token(user_id: int) -> str:
-    exp = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_minutes)
-    return jwt.encode({"sub": str(user_id), "exp": exp}, settings.secret_key, algorithm="HS256")
+    def __init__(self, secret_key: str, lifetime_minutes: int):
+        self._secret = secret_key
+        self._lifetime = timedelta(minutes=lifetime_minutes)
 
+    def issue(self, user_id: int) -> str:
+        expires = datetime.now(timezone.utc) + self._lifetime
+        return jwt.encode({"sub": str(user_id), "exp": expires}, self._secret, algorithm=self.ALGORITHM)
 
-def current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
-    err = HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid or expired token")
-    try:
-        user_id = int(jwt.decode(token, settings.secret_key, algorithms=["HS256"])["sub"])
-    except (jwt.PyJWTError, ValueError, KeyError):
-        raise err
-    user = db.get(User, user_id)
-    if not user:
-        raise err
-    return user
+    def user_id_from(self, token: str) -> int:
+        try:
+            return int(jwt.decode(token, self._secret, algorithms=[self.ALGORITHM])["sub"])
+        except (jwt.PyJWTError, ValueError, KeyError):
+            raise AuthenticationFailed(self.INVALID)

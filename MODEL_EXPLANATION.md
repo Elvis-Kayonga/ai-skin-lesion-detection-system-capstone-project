@@ -259,8 +259,8 @@ Supporting scripts:
 | File | Purpose |
 |---|---|
 | `backend/scripts/calibrate.py` | Runs the calibration test on my laptop using the saved raw answers |
-| `backend/app/calibration.py` | The calibration maths, kept in one place |
-| `backend/tests/test_calibration.py` | 7 automated tests that check the calibration maths is correct |
+| `backend/app/ml/calibration.py` | The calibration maths, kept in one place |
+| `backend/tests/` | 58 automated tests: unit tests for each part (quality rules, review rule, security, services, calibration) and integration tests of the whole API with the real model |
 
 ---
 

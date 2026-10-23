@@ -18,7 +18,7 @@ import numpy as np
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO / "backend"))
-from app import calibration as cal  # noqa: E402
+from app.ml import calibration as cal  # noqa: E402
 
 
 @dataclass
@@ -63,20 +63,25 @@ def melanoma_rule_stats(p_mel: np.ndarray, labels: np.ndarray, mel_idx: int, thr
                 alert_rate=float(alert.mean()), precision=tp / max(int(alert.sum()), 1))
 
 
+def _share(mask: np.ndarray) -> float | None:
+    """Mean of a boolean array, or None when the group is empty (instead of a NaN and a warning)."""
+    return float(mask.mean()) if mask.size else None
+
+
 def flag_report(probs: np.ndarray, labels: np.ndarray, flag: np.ndarray, mel_idx: int) -> dict:
     """The numbers the capstone reports for the review flag."""
     pred = probs.argmax(1)
     correct, is_mel = pred == labels, labels == mel_idx
     return dict(
-        accuracy=float(correct.mean()),
-        flag_rate=float(flag.mean()),
-        accuracy_unflagged=float(correct[~flag].mean()),
-        accuracy_flagged=float(correct[flag].mean()),
-        share_of_mistakes_flagged=float(flag[~correct].mean()),
-        melanoma_sensitivity_top_class=float(correct[is_mel].mean()),
-        melanoma_sensitivity_with_flag=float((correct | flag)[is_mel].mean()),
-        melanoma_specificity_top_class=float((pred[~is_mel] != mel_idx).mean()),
-        melanoma_specificity_unflagged=float((~flag[~is_mel]).mean()),
+        accuracy=_share(correct),
+        flag_rate=_share(flag),
+        accuracy_unflagged=_share(correct[~flag]),
+        accuracy_flagged=_share(correct[flag]),
+        share_of_mistakes_flagged=_share(flag[~correct]),
+        melanoma_sensitivity_top_class=_share(correct[is_mel]),
+        melanoma_sensitivity_with_flag=_share((correct | flag)[is_mel]),
+        melanoma_specificity_top_class=_share(pred[~is_mel] != mel_idx),
+        melanoma_specificity_unflagged=_share(~flag[~is_mel]),
     )
 
 

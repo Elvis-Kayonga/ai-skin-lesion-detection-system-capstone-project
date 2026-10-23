@@ -164,7 +164,7 @@ In plain words: the flag works as a useful warning. The model is much more accur
 
 ### Calibration experiment (not yet used by the app)
 
-The model's probabilities are overconfident, so a follow-up experiment fitted one "temperature" number (2.017, on the validation set only) to make them honest, and re-chose the review thresholds. The code is in `backend/app/calibration.py` and `backend/scripts/calibrate.py`, with unit tests in `backend/tests/`, and the numbers are in `docs/results/calibration_results.json`.
+The model's probabilities are overconfident, so a follow-up experiment fitted one "temperature" number (2.017, on the validation set only) to make them honest, and re-chose the review thresholds. The code is in `backend/app/ml/calibration.py` and `backend/scripts/calibrate.py`, with unit tests in `backend/tests/`, and the numbers are in `docs/results/calibration_results.json`.
 
 | Test set | Before | After |
 |---|---|---|

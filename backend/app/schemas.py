@@ -1,3 +1,5 @@
+"""Request and response shapes of the API (what goes over the wire)."""
+from dataclasses import asdict
 from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict
@@ -27,6 +29,10 @@ class PredictionOut(BaseModel):
     disclaimer: str
     inference_ms: int
 
+    @classmethod
+    def from_result(cls, result) -> "PredictionOut":
+        return cls(**asdict(result))
+
 
 class CaseSummary(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -36,3 +42,7 @@ class CaseSummary(BaseModel):
     class_name: str
     entropy: float
     review_recommended: bool
+
+    @classmethod
+    def from_overview(cls, overview) -> "CaseSummary":
+        return cls(**asdict(overview))
