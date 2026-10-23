@@ -1,0 +1,63 @@
+{
+  "label": "kaggle-t4-gpu",
+  "model_device": "cuda",
+  "environment": {
+    "os": "Linux 6.18.48+ (#1 SMP Sun Sep 27 17:32:16 UTC 2026)",
+    "cpu": "Intel(R) Xeon(R) CPU @ 2.00GHz",
+    "logical_cores": 4,
+    "ram_gb": 33.7,
+    "gpu": "Tesla T4",
+    "python": "3.13.15",
+    "torch": "2.11.0+cu128",
+    "fastapi": "0.141.1"
+  },
+  "image": "ISIC_0030440.jpg",
+  "startup_s": 14.6,
+  "rss_after_startup_mb": 1436,
+  "cold_first_prediction": {
+    "round_trip_ms": 249,
+    "server_inference_ms": 165
+  },
+  "warm_sequential": {
+    "round_trip": {
+      "n": 20,
+      "mean_ms": 169,
+      "p50_ms": 169,
+      "p95_ms": 178,
+      "min_ms": 160,
+      "max_ms": 180
+    },
+    "server_inference": {
+      "n": 20,
+      "mean_ms": 114,
+      "p50_ms": 114,
+      "p95_ms": 119,
+      "min_ms": 110,
+      "max_ms": 123
+    }
+  },
+  "rss_after_warm_mb": 1450,
+  "concurrent": {
+    "clients": 4,
+    "requests": 12,
+    "wall_s": 1.47,
+    "throughput_req_per_s": 8.18,
+    "round_trip": {
+      "n": 12,
+      "mean_ms": 448,
+      "p50_ms": 458,
+      "p95_ms": 612,
+      "min_ms": 280,
+      "max_ms": 653
+    },
+    "health_during_load": {
+      "n": 6,
+      "mean_ms": 68,
+      "p50_ms": 71,
+      "p95_ms": 87,
+      "min_ms": 37,
+      "max_ms": 87
+    }
+  },
+  "rss_peak_mb": 1484
+}
