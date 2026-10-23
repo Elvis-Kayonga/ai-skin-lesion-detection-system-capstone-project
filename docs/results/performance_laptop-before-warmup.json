@@ -1,0 +1,62 @@
+{
+  "label": "laptop-before-warmup",
+  "environment": {
+    "os": "Windows 10 (10.0.19045)",
+    "cpu": "Intel64 Family 6 Model 78 Stepping 3, GenuineIntel",
+    "logical_cores": 4,
+    "ram_gb": 8.5,
+    "gpu": "none (CPU inference)",
+    "python": "3.12.6",
+    "torch": "2.14.1+cpu",
+    "fastapi": "0.142.2"
+  },
+  "image": "ISIC_0030440.jpg",
+  "startup_s": 12.46,
+  "rss_after_startup_mb": 427,
+  "cold_first_prediction": {
+    "round_trip_ms": 7945,
+    "server_inference_ms": 7337
+  },
+  "warm_sequential": {
+    "round_trip": {
+      "n": 20,
+      "mean_ms": 1438,
+      "p50_ms": 1433,
+      "p95_ms": 1506,
+      "min_ms": 1371,
+      "max_ms": 1529
+    },
+    "server_inference": {
+      "n": 20,
+      "mean_ms": 900,
+      "p50_ms": 896,
+      "p95_ms": 954,
+      "min_ms": 840,
+      "max_ms": 984
+    }
+  },
+  "rss_after_warm_mb": 960,
+  "concurrent": {
+    "clients": 4,
+    "requests": 12,
+    "wall_s": 18.31,
+    "throughput_req_per_s": 0.66,
+    "round_trip": {
+      "n": 12,
+      "mean_ms": 5464,
+      "p50_ms": 5691,
+      "p95_ms": 6481,
+      "min_ms": 3152,
+      "max_ms": 6788
+    },
+    "health_during_load": {
+      "n": 19,
+      "mean_ms": 768,
+      "p50_ms": 760,
+      "p95_ms": 912,
+      "min_ms": 639,
+      "max_ms": 1096
+    }
+  },
+  "rss_peak_mb": 2190
+}

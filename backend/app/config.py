@@ -29,6 +29,8 @@ class Settings(BaseSettings):
     sharpness_side_px: int = 512
 
     model_version: str = "efficientnet_b3-v0"
+    # Run one throw-away prediction at start-up so the first real user does not pay the one-off set-up cost.
+    warmup_on_startup: bool = True
 
 
 settings = Settings()
