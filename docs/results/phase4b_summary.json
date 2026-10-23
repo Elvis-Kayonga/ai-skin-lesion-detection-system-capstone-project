@@ -1,0 +1,201 @@
+{
+  "passes_promotion_rule": false,
+  "checks": {
+    "HAM macro-F1 not worse": false,
+    "HAM melanoma sens. not worse": true,
+    "locked dark-skin accuracy improved": true,
+    "locked dark-skin high-risk catch not down": true,
+    "locked ISIC false alarms not up": false
+  },
+  "best_recipe": {
+    "epochs": 6,
+    "dark_share": 0.3,
+    "fitz3_share": 0.15,
+    "benign_share": 0.3,
+    "lr_backbone": 0.0001,
+    "lr_head": 0.0003,
+    "label_smoothing": 0.0,
+    "freeze_blocks": 0,
+    "dark_class_balance": false
+  },
+  "best_dev_scores": {
+    "dark_dev_macro_f1": 0.5501165501165501,
+    "dark_dev_accuracy": 0.7727272727272727,
+    "dark_dev_hr_sens_flag": 0.9807692307692307,
+    "ham_val_macro_f1": 0.6839785518732413,
+    "ham_val_mel_sens": 0.722972972972973,
+    "benign_dev_false_alarm": 0.018604651162790697
+  },
+  "reference_dev_scores": {
+    "dark_dev": {
+      "accuracy": 0.2818181818181818,
+      "macro_f1": 0.23719759168035032,
+      "hr_sens_flag": 0.8653846153846154,
+      "mel_sens": 0.3793103448275862,
+      "false_alarm": null
+    },
+    "ham_val": {
+      "accuracy": 0.855281207133059,
+      "macro_f1": 0.7445294151311455,
+      "hr_sens_flag": 0.9301587301587302,
+      "mel_sens": 0.6972972972972973,
+      "false_alarm": null
+    },
+    "benign_dev": {
+      "accuracy": null,
+      "macro_f1": null,
+      "hr_sens_flag": null,
+      "mel_sens": null,
+      "false_alarm": 0.027906976744186046
+    }
+  },
+  "finetuned_thresholds": [
+    0.6002088785171509,
+    0.05
+  ],
+  "original_thresholds": [
+    0.4129127562046051,
+    0.05
+  ],
+  "config": {
+    "seed": 42,
+    "class_codes": [
+      "akiec",
+      "bcc",
+      "bkl",
+      "df",
+      "mel",
+      "nv",
+      "vasc"
+    ],
+    "high_risk": [
+      "akiec",
+      "bcc",
+      "mel"
+    ],
+    "input_size": 300,
+    "mean": [
+      0.485,
+      0.456,
+      0.406
+    ],
+    "std": [
+      0.229,
+      0.224,
+      0.225
+    ],
+    "dark_fitz_types": [
+      4,
+      5,
+      6
+    ],
+    "lock_share": 0.2,
+    "dev_folds": 4,
+    "batch_size": 32,
+    "samples_per_epoch": 3000,
+    "weight_decay": 0.0001,
+    "base": {
+      "epochs": 6,
+      "dark_share": 0.3,
+      "fitz3_share": 0.0,
+      "benign_share": 0.0,
+      "lr_backbone": 0.0001,
+      "lr_head": 0.0003,
+      "label_smoothing": 0.0,
+      "freeze_blocks": 0,
+      "dark_class_balance": false
+    },
+    "trials": [
+      [
+        "add benign dark-skin lesions (0.15)",
+        {
+          "benign_share": 0.15
+        }
+      ],
+      [
+        "more benign dark-skin share (0.3)",
+        {
+          "benign_share": 0.3
+        }
+      ],
+      [
+        "more dark-skin share (0.45)",
+        {
+          "dark_share": 0.45
+        }
+      ],
+      [
+        "longer training (10 epochs)",
+        {
+          "epochs": 10
+        }
+      ],
+      [
+        "class-balanced dark sampling",
+        {
+          "dark_class_balance": true
+        }
+      ],
+      [
+        "label smoothing 0.1",
+        {
+          "label_smoothing": 0.1
+        }
+      ],
+      [
+        "add Fitzpatrick III photos (0.15)",
+        {
+          "fitz3_share": 0.15
+        }
+      ],
+      [
+        "freeze first 4 backbone blocks",
+        {
+          "freeze_blocks": 4
+        }
+      ],
+      [
+        "lower backbone learning rate",
+        {
+          "lr_backbone": 3e-05
+        }
+      ]
+    ],
+    "min_gain": 0.005,
+    "time_budget_h": 8.0,
+    "ham_val_f1_drop": 0.01,
+    "dev_false_alarm_rise": 0.02,
+    "mc_passes": 10,
+    "mc_seed": 1234,
+    "entropy_percentile": 80.0,
+    "mel_recall_target": 0.9,
+    "bootstrap": 1000,
+    "promote": {
+      "ham_macro_f1_drop": 0.01,
+      "ham_mel_sens_drop": 0.03,
+      "dark_false_alarm_rise": 0.02,
+      "dark_hr_flag_drop": 0.0
+    },
+    "max_per_source": null,
+    "workers": 16,
+    "num_workers": 2
+  },
+  "finetuned_ham_test_metrics": {
+    "accuracy": 0.8043025676613463,
+    "macro_precision": 0.6834352991364009,
+    "macro_recall": 0.7460204704162238,
+    "macro_f1": 0.7082525861646118,
+    "macro_auc_ovr": 0.9549789623254613,
+    "melanoma_sensitivity": 0.7054794520547946
+  },
+  "finetuned_ham_mission_metrics": {
+    "mc_accuracy": 0.8015267175572519,
+    "review_rate": 0.3816793893129771,
+    "accuracy_unflagged": 0.9472502805836139,
+    "accuracy_flagged": 0.5654545454545454,
+    "errors_caught_by_flag": 0.8356643356643356,
+    "melanoma_sensitivity_argmax": 0.6986301369863014,
+    "melanoma_sensitivity_with_flag": 0.9383561643835616
+  },
+  "honest_scope": "Dark-skin data is a small web-sourced Fitzpatrick17k sample (no patient ids, some label noise). The locked test set is small; results are indicative only. Not a validation for clinical use on dark skin."
+}

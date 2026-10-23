@@ -1,0 +1,50 @@
+{
+  "dark_dev": {
+    "n": 110,
+    "classes": {
+      "bcc": 67,
+      "mel": 29,
+      "akiec": 8,
+      "vasc": 4,
+      "df": 2
+    },
+    "folds": {
+      "0": 28,
+      "1": 28,
+      "3": 27,
+      "2": 27
+    }
+  },
+  "dark_locked_test": {
+    "n": 29,
+    "classes": {
+      "bcc": 17,
+      "mel": 11,
+      "df": 1
+    },
+    "fitzpatrick": {
+      "4": 18,
+      "5": 6,
+      "6": 5
+    }
+  },
+  "isic_benign_dev": {
+    "n": 215,
+    "patients": 11
+  },
+  "isic_benign_locked_test": {
+    "n": 195,
+    "patients": 10
+  },
+  "fitz3_training_pool": 118,
+  "ham": {
+    "train": 7116,
+    "val": 1458,
+    "test": 1441
+  },
+  "licences": {
+    "HAM10000": "CC BY-NC 4.0",
+    "Fitzpatrick17k": "CC BY-NC-SA 3.0 (Groh et al. 2021)",
+    "ISIC Fitzpatrick V-VI (MSK)": "CC BY (Memorial Sloan Kettering Cancer Center)"
+  }
+}
