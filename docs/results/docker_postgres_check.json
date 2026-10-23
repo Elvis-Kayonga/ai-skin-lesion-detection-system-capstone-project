@@ -1,0 +1,20 @@
+{
+  "purpose": "FR-07: run the full stack with PostgreSQL through Docker Compose and check that cases are stored",
+  "date": "2026-10-23",
+  "machine": "Windows 10 laptop, Intel Core i5-6300U, Docker Desktop 29.3.1 (4 CPUs, 4 GB for Docker)",
+  "command": "docker compose up --build -d, then python backend/scripts/smoke_test.py http://localhost:8000",
+  "services": {"db": "postgres:16-alpine (PostgreSQL 16.15), healthy", "api": "FastAPI, /health model_loaded true", "web": "nginx on :8080, HTTP 200"},
+  "tables_created_in_postgres": ["users", "cases", "classification_results", "explainability_maps"],
+  "rows_after_test": {"users": 5, "cases": 4, "classification_results": 4, "explainability_maps": 4},
+  "predictions": [
+    {"case_id": 1, "predicted_class": "mel", "review_recommended": true, "server_inference_ms": 289494, "note": "first request, right after the container started"},
+    {"case_id": 2, "predicted_class": "mel", "review_recommended": true, "server_inference_ms": 2142},
+    {"case_id": 3, "predicted_class": "mel", "review_recommended": true, "server_inference_ms": 1132},
+    {"case_id": 4, "predicted_class": "mel", "review_recommended": true, "server_inference_ms": 926}
+  ],
+  "observations": [
+    "The image was ISIC_0030440.jpg, a melanoma from the held-out test set. One image says nothing about accuracy.",
+    "The first container start took several minutes on this laptop (building the matplotlib font cache and loading PyTorch inside Docker), and the first prediction took about 290 s. Later predictions took 0.9 to 2.1 s.",
+    "Users counted 5 because earlier attempts of the test script registered accounts before it was fixed."
+  ]
+}
