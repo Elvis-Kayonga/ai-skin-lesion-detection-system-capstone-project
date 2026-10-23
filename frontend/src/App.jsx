@@ -1,35 +1,21 @@
-import { useEffect, useState } from "react";
-import * as api from "./api.js";
+import { useState } from "react";
+import { DISCLAIMER } from "./constants.js";
+import { api } from "./services/api.js";
+import { useSession } from "./hooks/useSession.js";
+import { useCaseHistory } from "./hooks/useCaseHistory.js";
 import Upload from "./components/Upload.jsx";
 import ResultCard from "./components/ResultCard.jsx";
 import History from "./components/History.jsx";
 import Limitations from "./components/Limitations.jsx";
 
+const TABS = [["screen", "Screen"], ["history", "History"], ["about", "Limitations"]];
+
 export default function App() {
-  const [status, setStatus] = useState("loading"); // loading | ready | error
-  const [bootError, setBootError] = useState("");
+  const session = useSession();
+  const { cases, refresh } = useCaseHistory(session.status === "ready");
   const [result, setResult] = useState(null);
   const [original, setOriginal] = useState(null);
-  const [cases, setCases] = useState([]);
   const [tab, setTab] = useState("screen");
-
-  const refresh = () => api.listCases().then(setCases).catch(() => {});
-
-  const boot = () => {
-    setStatus("loading");
-    api
-      .ensureSession()
-      .then(() => {
-        setStatus("ready");
-        refresh();
-      })
-      .catch((e) => {
-        setBootError(e.message);
-        setStatus("error");
-      });
-  };
-
-  useEffect(boot, []);
 
   const openCase = async (id) => {
     setOriginal(null);
@@ -38,10 +24,17 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const showResult = (r, preview) => {
+    setResult(r);
+    setOriginal(preview);
+    refresh();
+    setTimeout(() => document.querySelector(".result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+  };
+
   return (
     <div className="shell">
       <div className="topbar" role="note">
-        {api.DISCLAIMER} <button className="link" onClick={() => setTab("about")}>Read the limitations</button>
+        {DISCLAIMER} <button className="link" onClick={() => setTab("about")}>Read the limitations</button>
       </div>
 
       <header className="header">
@@ -53,7 +46,7 @@ export default function App() {
           </div>
         </div>
         <nav className="tabs" aria-label="Main">
-          {[["screen", "Screen"], ["history", "History"], ["about", "Limitations"]].map(([id, label]) => (
+          {TABS.map(([id, label]) => (
             <button key={id} className={tab === id ? "tab active" : "tab"} onClick={() => setTab(id)}>
               {label}
               {id === "history" && cases.length > 0 && <span className="count">{cases.length}</span>}
@@ -63,38 +56,30 @@ export default function App() {
       </header>
 
       <main className="main">
-        {status === "loading" && (
+        {session.status === "loading" && (
           <section className="card center"><span className="spinner dark" aria-hidden="true" /> Connecting to the screening server...</section>
         )}
 
-        {status === "error" && (
+        {session.status === "error" && (
           <section className="card center">
-            <div className="notice error-box" role="alert">{bootError}</div>
-            <button className="btn primary" onClick={boot}>Try again</button>
+            <div className="notice error-box" role="alert">{session.error}</div>
+            <button className="btn primary" onClick={session.retry}>Try again</button>
           </section>
         )}
 
-        {status === "ready" && tab === "screen" && (
+        {session.status === "ready" && tab === "screen" && (
           <>
-            <Upload
-              onStart={() => setResult(null)}
-              onResult={(r, preview) => {
-                setResult(r);
-                setOriginal(preview);
-                refresh();
-                setTimeout(() => document.querySelector(".result")?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
-              }}
-            />
+            <Upload onStart={() => setResult(null)} onResult={showResult} />
             {result ? <ResultCard result={result} original={original} /> : <Limitations compact />}
           </>
         )}
 
-        {status === "ready" && tab === "history" && <History cases={cases} onOpen={openCase} />}
+        {session.status === "ready" && tab === "history" && <History cases={cases} onOpen={openCase} />}
         {tab === "about" && <Limitations />}
       </main>
 
       <footer className="footer">
-        <strong>{api.DISCLAIMER}</strong>
+        <strong>{DISCLAIMER}</strong>
         <span>Prototype for a university capstone. No real patient data.</span>
       </footer>
     </div>

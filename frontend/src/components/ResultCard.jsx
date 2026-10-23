@@ -1,4 +1,4 @@
-import { DISCLAIMER } from "../api.js";
+import { DISCLAIMER } from "../constants.js";
 
 const NAMES = {
   akiec: "Actinic keratoses",

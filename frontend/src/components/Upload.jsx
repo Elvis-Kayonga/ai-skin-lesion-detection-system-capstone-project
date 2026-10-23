@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import * as api from "../api.js";
+import { api } from "../services/api.js";
 import Camera from "./Camera.jsx";
 
 export default function Upload({ onStart, onResult }) {
