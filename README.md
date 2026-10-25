@@ -15,7 +15,7 @@ Author: Kayonga Elvis (African Leadership University, BSc Software Engineering, 
 Links:
 
 - GitHub repo: https://github.com/Elvis-Kayonga/ai-skin-lesion-detection-system-capstone-project
-- Demo video: https://youtu.be/xynFxpXcZa8 (recorded before the latest changes; an updated video link will replace it)
+- Demo video: https://youtu.be/votQSD1zOco
 - Technical report (PDF): [docs/report/Technical_Report_Kayonga_Elvis.pdf](docs/report/Technical_Report_Kayonga_Elvis.pdf)
 - Capstone proposal (PDF): [docs/Capstone_Proposal_Kayonga_Elvis.pdf](docs/Capstone_Proposal_Kayonga_Elvis.pdf)
 - Plain-language explanation of the whole project: [MODEL_EXPLANATION.md](MODEL_EXPLANATION.md)
