@@ -87,6 +87,7 @@ docs/report/          technical report (PDF and its HTML source)
 docs/architecture/    system architecture diagrams (Section 2.1) and their Mermaid sources
 deploy/huggingface/   single-container setup for hosting online (prepared, not hosted yet)
 docker-compose.yml    PostgreSQL + API + web, production-style setup
+start.bat, start.ps1  start the backend and frontend with one command (Windows)
 MODEL_EXPLANATION.md  plain-language explanation of the whole project
 sample_images/        a few HAM10000 images to try the app with
   dark_skin/          29 dark-skin test photos (Fitzpatrick IV-VI) the deployed model never trained on
@@ -228,6 +229,16 @@ npm run dev
 ```
 
 Open http://localhost:5173 in your browser.
+
+### After the first setup: start everything with one command (Windows)
+
+From the repo root, in PowerShell:
+
+```powershell
+.\start.bat
+```
+
+It opens the backend and the frontend in two windows, waits until the model is loaded (about 35 seconds on my laptop), then opens the app in your browser. It also creates `backend/.env` with a random secret key if it is missing. To stop, close the two windows.
 
 ### Optional: run the original (HAM10000-only) model instead
 
