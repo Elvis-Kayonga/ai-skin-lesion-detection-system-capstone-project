@@ -16,7 +16,7 @@ Links:
 
 - GitHub repo: https://github.com/Elvis-Kayonga/ai-skin-lesion-detection-system-capstone-project
 - Demo video: https://youtu.be/xynFxpXcZa8 (recorded before the latest changes; an updated video link will replace it)
-- Technical report (PDF): [docs/report](docs/report/) (link will point to the final PDF)
+- Technical report (PDF): [docs/report/Technical_Report_Kayonga_Elvis.pdf](docs/report/Technical_Report_Kayonga_Elvis.pdf)
 - Capstone proposal (PDF): [docs/Capstone_Proposal_Kayonga_Elvis.pdf](docs/Capstone_Proposal_Kayonga_Elvis.pdf)
 - Plain-language explanation of the whole project: [MODEL_EXPLANATION.md](MODEL_EXPLANATION.md)
 
@@ -83,7 +83,7 @@ docs/results/         every result file (CSV/JSON) behind the numbers in this RE
 docs/figures/         charts
 docs/screenshots/     screenshots of the running app
 docs/usability/       SUS usability test guide and response template
-docs/report/          technical report
+docs/report/          technical report (PDF and its HTML source)
 docs/architecture/    system architecture diagrams (Section 2.1) and their Mermaid sources
 deploy/huggingface/   single-container setup for hosting online (prepared, not hosted yet)
 docker-compose.yml    PostgreSQL + API + web, production-style setup

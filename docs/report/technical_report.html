@@ -4,139 +4,113 @@
 <meta charset="utf-8">
 <title>Technical Report - Kayonga Elvis</title>
 <style>
-  @page { size: A4; margin: 16mm 16mm 15mm 16mm; }
-  body { font-family: "Calibri", "Segoe UI", Arial, sans-serif; font-size: 10.3pt; line-height: 1.32; color: #111; margin: 0; }
-  h1 { font-size: 15pt; margin: 0 0 2px 0; }
-  h2 { font-size: 11.5pt; margin: 9px 0 3px 0; border-bottom: 1px solid #999; padding-bottom: 1px; }
-  h3 { font-size: 10.5pt; margin: 6px 0 2px 0; }
-  p { margin: 3px 0 4px 0; text-align: justify; }
-  ul, ol { margin: 2px 0 4px 18px; padding: 0; }
-  li { margin: 1px 0; }
-  table { border-collapse: collapse; width: 100%; margin: 3px 0 5px 0; font-size: 9pt; }
-  th, td { border: 1px solid #aaa; padding: 2px 4px; vertical-align: top; text-align: left; }
-  th { background: #eee; }
-  .meta { font-size: 9.5pt; margin-bottom: 4px; }
-  .note { font-size: 9pt; color: #333; }
-  .box { border: 1px solid #555; padding: 3px 6px; margin: 4px 0; font-weight: bold; font-size: 9.5pt; }
-  .todo { background: #fff3b0; }
-  code { font-family: Consolas, monospace; font-size: 8.8pt; }
-  .num { text-align: right; }
+  @page { size: A4; margin: 22mm 22mm 20mm 22mm; }
+  body { font-family: "Times New Roman", Times, serif; font-size: 11.5pt; line-height: 1.38; color: #000; margin: 0; }
+  h1 { font-size: 21pt; text-align: center; margin: 4mm 0 4mm 0; line-height: 1.2; }
+  .sub { text-align: center; font-size: 11pt; margin: 0 0 1mm 0; }
+  .sub b { font-size: 11.5pt; }
+  h2 { font-size: 15pt; margin: 6mm 0 2mm 0; }
+  h3 { font-size: 12pt; margin: 4mm 0 1.5mm 0; }
+  p { margin: 0 0 2.2mm 0; text-align: justify; }
+  ol, ul { margin: 0 0 2.2mm 6mm; padding-left: 4mm; }
+  li { margin: 0 0 0.8mm 0; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0 3mm 0; font-size: 10.5pt; page-break-inside: avoid; }
+  th, td { border: 1px solid #000; padding: 1.2mm 1.8mm; vertical-align: top; text-align: left; }
+  th { font-weight: bold; }
+  .disc { text-align: center; font-weight: bold; font-size: 10.5pt; margin: 2mm 0 4mm 0; }
+  h2, h3 { break-after: avoid; page-break-after: avoid; }
+  p { orphans: 3; widows: 3; }
+  code { font-family: "Courier New", monospace; font-size: 9.5pt; }
 </style>
 </head>
 <body>
 
 <h1>Explainable, Uncertainty-Aware Skin Lesion Pre-Screening for Low-Resource Settings in Rwanda</h1>
-<div class="meta">
-Technical report, Capstone, BSc Software Engineering, African Leadership University, Kigali<br>
-Author: Kayonga Elvis &nbsp;|&nbsp; Supervisor: Dirac Murairi &nbsp;|&nbsp; October 2026<br>
-Repository: https://github.com/Elvis-Kayonga/ai-skin-lesion-detection-system-capstone-project &nbsp;|&nbsp; Demo video: <span class="todo">[VIDEO LINK]</span>
-</div>
-<div class="box">Decision-support prototype only. Not a diagnosis. Consult a qualified clinician.</div>
+<p class="sub"><b>Technical Report</b></p>
+<p class="sub">Kayonga Elvis, BSc Software Engineering, African Leadership University</p>
+<p class="sub">Supervisor: Dirac Murairi</p>
+<p class="sub">October 2026</p>
+<p class="disc">Decision-support prototype only. Not a diagnosis. Consult a qualified clinician.</p>
 
-<h2>1. Problem and what I built</h2>
-<p>Sub-Saharan Africa, Rwanda included, has very few specialist dermatologists, so most people with a suspicious skin lesion are seen by a clinician or health worker without dermatology training. I built a web prototype that helps that first step. A health worker uploads or takes a photo of a lesion and the system returns: the most likely of 7 lesion classes with a probability for each, an uncertainty level, a "Review recommended" warning when the model is unsure or sees any sign of melanoma, and a Grad-CAM heatmap showing which part of the image drove the result. Every case is stored so it can be reviewed later. The tool does not diagnose. It is meant to help decide which cases need a specialist.</p>
-<p>The stack is Python with PyTorch (EfficientNet-B3), FastAPI, SQLAlchemy with SQLite for development and PostgreSQL in Docker Compose for production, and React (Vite) for the interface. The model was first trained on HAM10000 (10,015 dermoscopy images, 7 classes) and then fine-tuned with dark-skin photos (Section 4.5); the fine-tuned version is the one deployed.</p>
+<h2>Abstract</h2>
+<p>This project builds a web tool that helps a health worker decide which skin lesion photos need a specialist. It uses EfficientNet-B3 trained on HAM10000 (10,015 dermoscopy images, 7 classes). For each photo it gives the most likely class, an uncertainty score from Monte Carlo Dropout, a review flag, and a Grad-CAM heatmap. On 1,441 held-out test images, the first model reached 83.5 percent accuracy and macro F1 0.732, better than a MobileNetV2 baseline (0.673). The same model reached only 28 percent accuracy on dark-skin photos. I fine-tuned it on dark-skin photos, benign dark-skin lesions and Fitzpatrick III photos, with a test set locked before tuning. On that locked set, accuracy rose from 27.6 to 82.8 percent, but the set has only 29 photos. The deployed model catches 93.8 percent of melanomas when the review flag counts. It broke 2 of 5 rules I set before the run, and I deployed it anyway, with the reasons written down. The usability study was not run.</p>
 
-<h2>2. Scope: what the proposal promised and what was delivered</h2>
-<table>
-<tr><th style="width:8%">ID</th><th style="width:40%">Requirement (proposal)</th><th style="width:12%">Status</th><th>Evidence</th></tr>
-<tr><td>FR-01</td><td>Upload a lesion image in the web interface</td><td>Done</td><td>Upload, drag and drop, and in-browser camera capture</td></tr>
-<tr><td>FR-02</td><td>Validate format, resolution and size</td><td>Done</td><td>Type (415), size (413), decodable (400), resolution and blur (422) checks; unit and API tests</td></tr>
-<tr><td>FR-03</td><td>Classify into the 7 HAM10000 classes</td><td>Done</td><td>EfficientNet-B3, results in Section 5</td></tr>
-<tr><td>FR-04</td><td>Estimate uncertainty and show a confidence score</td><td>Done</td><td>MC Dropout (10 passes), entropy, Low / Medium / High badge</td></tr>
-<tr><td>FR-05</td><td>Grad-CAM heatmap for the top class</td><td>Done</td><td>Shown next to the original photo</td></tr>
-<tr><td>FR-06</td><td>High uncertainty triggers a review alert</td><td>Done</td><td>Review rule in Section 4.3, banner on every flagged result</td></tr>
-<tr><td>FR-07</td><td>Case metadata stored in PostgreSQL</td><td>Done</td><td>Docker Compose run with PostgreSQL 16.15: 4 cases, results and heatmap rows stored (<code>docs/results/docker_postgres_check.json</code>)</td></tr>
-<tr><td>FR-08</td><td>Documented REST API</td><td>Done</td><td>FastAPI with Swagger UI at <code>/docs</code></td></tr>
-<tr><td>FR-09</td><td>Basic authentication restricts access</td><td>Changed</td><td>JWT auth kept on every API call, but the login screen was replaced by an automatic anonymous session per browser (justified in Section 7)</td></tr>
-</table>
-<p>Non-functional requirements: result within 10 s (met: about 1.5 s on my laptop CPU, Section 6); graceful errors (met: every rejection returns a clear message); hashed passwords (bcrypt) and minimal image data (met); modular documented code on GitHub (met); disclaimer on every output (met); SUS of 65 or more (<b>not done</b>: the study kit is ready but the sessions could not be run before the deadline, Section 6).</p>
-
-<h2>3. System design and code structure</h2>
-<p>The backend follows a layered design so that each part can be tested and replaced on its own:</p>
-<ul>
-<li><b>API layer</b> (<code>api/routers</code>): thin FastAPI routes for system, auth, screening and cases. They only translate HTTP to service calls.</li>
-<li><b>Service layer</b> (<code>services.py</code>): <code>AuthService</code> and <code>ScreeningService</code> hold the business logic, for example "validate, classify, explain, decide review, store".</li>
-<li><b>Domain and ML layer</b> (<code>ml/</code>): abstract interfaces <code>LesionClassifier</code> and <code>Explainer</code> with concrete <code>EfficientNetClassifier</code> and <code>GradCamExplainer</code>; <code>ReviewPolicy</code> decides the review flag; <code>ModelConfig</code> loads the model contract.</li>
-<li><b>Data layer</b>: <code>UserRepository</code> and <code>CaseRepository</code> wrap SQLAlchemy; <code>ImageStore</code> handles files.</li>
-<li><b>Composition root</b>: <code>AppContainer</code> builds every object once at start-up and FastAPI injects them with <code>Depends</code>.</li>
-</ul>
-<p>Design choices I can defend: image checks use the <b>Strategy pattern</b> (each check is a <code>QualityCheck</code> subclass run by <code>ImageValidator</code>, so a new check is one new class); the model sits behind an <b>abstract interface</b>, so a new model or a test fake plugs in without touching the API; the <b>repository pattern</b> keeps SQL out of the services, which is why moving from SQLite to PostgreSQL needed only a configuration change; and <b>domain errors</b> (<code>AppError</code> and subclasses) map to HTTP codes in one place instead of in every route. The frontend mirrors this with an <code>ApiClient</code> class, a <code>SessionStore</code> and two hooks (<code>useSession</code>, <code>useCaseHistory</code>). The database has the four tables from the proposal ERD: users, cases, classification_results and explainability_maps.</p>
-
-<h2>4. Algorithms</h2>
-<h3>4.1 Classifier</h3>
-<p>EfficientNet-B3 pretrained on ImageNet, final layer replaced with 7 outputs, 300 x 300 input with ImageNet normalisation. Training used AdamW, a cosine learning-rate schedule, a class-weighted loss (about 67% of HAM10000 is one class, common moles), augmentation, and early stopping on validation macro F1 (14 epochs). MobileNetV2 with the same setup is the baseline. The split is by lesion, not by image, so the same lesion never appears in two sets (test set: 1,441 images).</p>
-<h3>4.2 Uncertainty (Monte Carlo Dropout)</h3>
-<p>The backbone runs once; the classifier head runs 10 times with dropout switched on, and the softmax outputs are averaged. Uncertainty is the entropy of the averaged distribution, H = -sum p log p. Running only the head 10 times keeps the cost low (one backbone pass instead of ten).</p>
-<h3>4.3 Review rule</h3>
-<p>A case is flagged for clinician review when entropy is at least the 80th percentile on the validation set (0.600 for the deployed v1, 0.413 for v0) <b>or</b> the melanoma probability is at least 0.05. The low melanoma threshold is deliberate: missing a melanoma is far worse than an extra referral. Both thresholds were chosen on validation data only.</p>
-<h3>4.4 Explainability and calibration</h3>
-<p>Grad-CAM uses the last feature block and the top predicted class, run in evaluation mode. I also fitted temperature scaling (T = 2.017 on validation), which lowered the expected calibration error on the test set from 0.095 to 0.021. It is stored in the model configuration but not yet used by the app, because it raises the review rate from 31.9% to 35.8%.</p>
-<h3>4.5 Dark-skin fine-tuning</h3>
-<p>HAM10000 has no skin-tone labels and comes mostly from lighter-skinned patients, while the users in Rwanda will mostly have Fitzpatrick V-VI skin. I ran three experiments, each with a pass/fail rule written before the run:</p>
-<ul>
-<li><b>Phase 3</b> (more data of the same kind): adding PAD-UFES-20 phone photos raised phone-photo accuracy from 34.1% to 80.2%, but false alarms on 410 benign dark-skin lesions rose from 1.7% to 31.2%. Not deployed.</li>
-<li><b>Phase 4, run 1</b> (train on dark skin): 139 Fitzpatrick17k images of skin types IV-VI, measured by 5-fold cross-validation. Dark-skin accuracy rose from 28.1% to 81.3% and dark-skin melanoma sensitivity from 37.5% to 70.0%, with HAM10000 macro F1 unchanged (0.732 to 0.741). But false alarms on the benign dark-skin set rose from 1.7% to 38.0%. The surviving dark-skin images are almost all cancers (84 BCC, 40 melanoma, no moles), so the model learned "dark skin means cancer". Not deployed.</li>
-<li><b>Phase 4b</b> (tuning with a locked test set): 20% of the dark-skin images and half of the benign dark-skin patients were locked away and used once at the end. Benign dark-skin lesions were added to training with a loss that pushes probability away from the cancer classes, and a fixed list of changes was tried one at a time, each kept only if it improved cross-validated dark-skin macro F1. Adding benign dark-skin lesions cut development false alarms from 21.9% to 1.4%; adding Fitzpatrick III photos gave the largest accuracy gain; more dark-skin share, longer training, class balancing and label smoothing did not help. The loop hit its 8-hour limit before the last two planned changes.</li>
-</ul>
-<table>
-<tr><th>One-time locked test</th><th class="num">Original (v0)</th><th class="num">Deployed (v1)</th></tr>
-<tr><td>Dark skin IV-VI accuracy (29 photos, 95% CI for v1: 69 to 97%)</td><td class="num">27.6%</td><td class="num">82.8%</td></tr>
-<tr><td>Dark-skin melanomas named correctly (11)</td><td class="num">36%</td><td class="num">73%</td></tr>
-<tr><td>Dark-skin cancers named or flagged for review</td><td class="num">92.9%</td><td class="num">100%</td></tr>
-<tr><td>Benign dark-skin lesions wrongly called cancer (195 lesions, 10 patients)</td><td class="num">0.5%</td><td class="num">4.1%</td></tr>
-<tr><td>HAM10000 test macro F1 / melanoma sensitivity</td><td class="num">0.732 / 57.5%</td><td class="num">0.708 / 70.5%</td></tr>
-</table>
-<p>The rule failed 2 of 5 checks: HAM10000 macro F1 fell by 0.024 (limit 0.01) and benign dark-skin false alarms rose by 3.6 points (limit 2). One more weakness: the HAM10000 safety limit used during tuning was missed by every recipe, so the loop effectively chose on dark-skin results alone. I still deployed v1, because the tool is meant for dark-skinned patients and, for screening, a missed cancer costs more than an extra referral. Choosing after seeing results is what the rule is meant to prevent, so I report it openly; v0 stays in <code>backend/model/original</code> and can be switched back with two settings.</p>
-
-<h2>5. Results (HAM10000 test set, 1,441 images)</h2>
-<table>
-<tr><th>Model</th><th class="num">Accuracy</th><th class="num">Macro precision</th><th class="num">Macro recall</th><th class="num">Macro F1</th><th class="num">Macro AUC</th><th class="num">Melanoma sensitivity</th></tr>
-<tr><td><b>EfficientNet-B3 v1, dark-skin fine-tune (deployed)</b></td><td class="num">80.4%</td><td class="num">0.683</td><td class="num">0.746</td><td class="num">0.708</td><td class="num">0.955</td><td class="num">70.5%</td></tr>
-<tr><td>EfficientNet-B3 v0 (proposed model, HAM10000 only)</td><td class="num">83.5%</td><td class="num">0.731</td><td class="num">0.743</td><td class="num">0.732</td><td class="num">0.963</td><td class="num">57.5%</td></tr>
-<tr><td>MobileNetV2 (baseline)</td><td class="num">81.0%</td><td class="num">0.650</td><td class="num">0.722</td><td class="num">0.673</td><td class="num">0.954</td><td class="num">41.8%</td></tr>
-</table>
-<table>
-<tr><th>Mission measure (test set)</th><th class="num">v1 (deployed)</th><th class="num">v0</th></tr>
-<tr><td>Images flagged for review</td><td class="num">38.2%</td><td class="num">31.3%</td></tr>
-<tr><td>Accuracy on images not flagged / flagged</td><td class="num">94.7% / 56.5%</td><td class="num">93.5% / 61.6%</td></tr>
-<tr><td>Model mistakes that were flagged</td><td class="num">83.6%</td><td class="num">73.0%</td></tr>
-<tr><td>Melanoma sensitivity, top class (MC average) / counting the flag</td><td class="num">69.9% / 93.8%</td><td class="num">61.0% / 87.7%</td></tr>
-</table>
-<p>The flag does what it is meant to do: the model is much more accurate on cases it is not worried about, and most of its mistakes are sent for review. Against the proposal targets: the melanoma false-negative rate is 6.2% for v1 (12.3% for v0) when the review flag counts as a catch, which meets the target of under 15%. Balanced accuracy (macro recall) is 74.6% (v0: 74.3%), which does <b>not</b> meet the 88-93% target. For v0, the weakest classes are akiec (F1 0.487) and melanoma (F1 0.530); df and vasc have only 9 and 21 test images, so their scores are unreliable.</p>
-
-<h2>6. Testing and performance</h2>
-<table>
-<tr><th>Level</th><th>What is tested</th><th>Result</th></tr>
-<tr><td>Backend unit and integration (pytest)</td><td>Each quality check, review rule, password hashing and tokens, services with fakes, calibration maths, SUS scoring, and 18 API tests through the full app (register, predict, case history, rejections, auth errors)</td><td>63 tests pass</td></tr>
-<tr><td>Frontend unit (Vitest)</td><td>API client: token handling, error messages, session recovery and retry</td><td>8 tests pass</td></tr>
-<tr><td>End to end (Playwright)</td><td>8 user journeys in Chromium, Firefox, WebKit, mobile Chrome and mobile Safari</td><td>38 pass, 2 skipped (camera test on WebKit, which has no fake camera)</td></tr>
-<tr><td>Continuous integration</td><td>All suites on every push (GitHub Actions)</td><td>Linux and Windows</td></tr>
-<tr><td>Deployment check</td><td>Docker Compose with PostgreSQL, API and nginx; scripted smoke test</td><td>Pass</td></tr>
-</table>
-<p>Performance was measured with my own benchmark script (<code>backend/scripts/benchmark.py</code>) on three machines, using the full HTTP round trip including Grad-CAM. They were measured with v0; v1 is the same network, so the speed is the same:</p>
-<table>
-<tr><th>Machine</th><th class="num">Start-up</th><th class="num">First prediction</th><th class="num">Warm median</th><th class="num">Throughput, 4 clients</th><th class="num">Peak memory</th></tr>
-<tr><td>Laptop, Intel i5-6300U, CPU only</td><td class="num">17.7 s</td><td class="num">1.58 s</td><td class="num">1.52 s</td><td class="num">0.63 req/s</td><td class="num">2,224 MB</td></tr>
-<tr><td>Kaggle server CPU (Xeon, 4 cores)</td><td class="num">6.6 s</td><td class="num">0.71 s</td><td class="num">0.61 s</td><td class="num">1.58 req/s</td><td class="num">2,956 MB</td></tr>
-<tr><td>Kaggle NVIDIA T4 GPU</td><td class="num">14.6 s</td><td class="num">0.25 s</td><td class="num">0.17 s</td><td class="num">8.18 req/s</td><td class="num">1,484 MB</td></tr>
-</table>
-<p>One fix came directly from this: the first prediction used to take 7.9 s on the laptop because of one-time initialisation inside PyTorch. A warm-up prediction at start-up cut it to 1.6 s, at the cost of about 5 s more start-up. The 10 s target is met on every machine. Inside Docker on the laptop, the very first request after a cold container start took about 290 s (font cache and model loading under Docker's limited CPU); later requests took 0.9 to 2.1 s. Usability: I prepared a complete System Usability Scale study (8 tasks, the standard 10-item questionnaire, a response template and a tested scoring script in <code>docs/usability</code> and <code>backend/scripts/sus_score.py</code>), but I could not run the sessions before the deadline, so there is <b>no SUS result</b> and the usability target is unverified. Usability evidence is limited to the end-to-end tests, which check that the main journeys work on desktop and phone layouts.</p>
-
-<h2>7. Discussion</h2>
-<p><b>Change to FR-09.</b> The proposal planned a login screen. For a prototype that handles only anonymous, non-identifying images, a login step adds friction for the user and for demos, and protects little. I kept the security underneath: the browser creates a random anonymous account on first use, every prediction and history call still needs a JWT, and one visitor cannot see another visitor's cases. The trade-off is that clearing browser data loses access to old cases. A real deployment with named health workers would add the login screen back, which is a small change because the auth service and endpoints already exist.</p>
-<p><b>Accuracy target.</b> 74.6% balanced accuracy is below the 88-93% I expected. Many published HAM10000 results use image-level splits (the same lesion can appear in training and test), ensembles or extra data. My lesion-level split is stricter, and I report the number as it is rather than tune on the test set.</p>
-<p><b>Dark skin.</b> This is the most important limitation and my main personal goal. The experiments show that more light-skin data does not help dark skin, and that a small dark-skin set can raise accuracy but also creates new shortcuts unless benign dark-skin cases are included. Public dark-skin data with lesion labels is very scarce. Adding benign dark-skin examples fixed most of the shortcut, and the deployed model is much better on a small locked dark-skin test, but 29 web photos with no moles cannot show that it is safe. I do not claim the system works on dark skin.</p>
-<p><b>Other limitations.</b> HAM10000 is dermoscopy, while health workers will mostly use phone cameras (the original model reached only 34% on phone photos, and the deployed model has not been tested on them). The model was never tested by clinicians, and the planned usability study was not run. Squamous cell carcinoma is not one of the 7 classes. No real patient data was used.</p>
-
-<h2>8. Future work</h2>
+<h2>Introduction</h2>
+<p>Rwanda, like much of sub-Saharan Africa, has very few dermatologists. Most people with a worrying skin lesion are first seen by a health worker without dermatology training. A tool that sorts photos into "needs a specialist" and "probably fine", and says when it is unsure, could help that first step. The proposal fixed three research questions:</p>
 <ol>
-<li>Collect consented, biopsy-confirmed photos from Rwandan clinics with ethics approval (Rwanda National Ethics Committee), with Fitzpatrick labels, and report sensitivity by skin type.</li>
-<li>Evaluate on the Diverse Dermatology Images dataset (I have access), finish the two untried tuning steps with a new locked test set, and add phone-photo data to training.</li>
-<li>Refit temperature calibration for v1, wire it in, and record self-reported skin type per case so fairness can be monitored.</li>
-<li>Run a usability study with community health workers and a pilot with clinicians before any real use.</li>
+<li>How accurately can a pretrained deep learning model classify the 7 HAM10000 lesion types, and how does a lightweight baseline compare with the proposed model?</li>
+<li>Can Grad-CAM and Monte Carlo Dropout uncertainty be built into a web pre-screening system that gives non-specialists clear, uncertainty-aware support?</li>
+<li>Does the system reach acceptable performance, useful explainability and good usability for a prototype meant for low-resource settings?</li>
 </ol>
-<p class="note">Data: HAM10000 (Tschandl et al., 2018, CC BY-NC 4.0); PAD-UFES-20 (Pacheco et al., 2020, CC BY); Fitzpatrick17k (Groh et al., 2021, CC BY-NC-SA 3.0); ISIC Archive images from Memorial Sloan Kettering (CC BY). Methods: EfficientNet (Tan and Le, 2019); MC Dropout (Gal and Ghahramani, 2016); Grad-CAM (Selvaraju et al., 2017); temperature scaling (Guo et al., 2017); SUS (Brooke, 1996).</p>
+<p>My own goal is that the tool works fairly for people with dark skin (Fitzpatrick V and VI). HAM10000 comes mostly from light-skinned patients and has no skin-tone labels, so I measured this gap and tried to reduce it.</p>
+
+<h2>Methods</h2>
+
+<h3>Data and split</h3>
+<p>HAM10000 has several photos of the same lesion. I split by lesion, not by photo, so one lesion is never in two sets: 7,116 training, 1,458 validation and 1,441 test images. The split files are saved in the repository. About 67 percent of images are common moles, so I used a class-weighted loss and report macro scores, which treat all 7 classes equally.</p>
+
+<h3>Model</h3>
+<p>EfficientNet-B3 starts from ImageNet weights, with the last layer replaced by 7 outputs and a 300 by 300 input. Training used AdamW, a cosine learning rate schedule, augmentation and early stopping on validation macro F1, in Google Colab on a T4 GPU (14 epochs). MobileNetV2 was trained the same way as the baseline.</p>
+
+<h3>Uncertainty, review rule and heatmap</h3>
+<p>The network's feature layers run once. The last layer runs 10 times with dropout on, and the 10 outputs are averaged. The entropy of the average is the uncertainty. A photo is flagged for clinician review if entropy is at or above the 80th percentile of the validation set, or if the melanoma probability is at least 5 percent. Both thresholds come from validation data only. The low melanoma threshold is on purpose: missing a melanoma is worse than an extra referral. Grad-CAM uses the last feature block and the top class.</p>
+
+<h3>Dark-skin experiments</h3>
+<p>Each experiment had a pass or fail rule written before it ran. Phase 3 added PAD-UFES-20 phone photos (mostly light skin). Phase 4 trained on the 139 Fitzpatrick17k photos of skin types IV to VI that still download, measured by 5-fold cross validation. Phase 4b locked 29 of those photos and the benign lesions of 10 of 21 ISIC dark-skin patients (195 lesions) before any tuning, and used them once at the end. It added the other 215 benign dark-skin lesions with a loss that pushes probability away from the 3 cancer and pre-cancer classes, and 118 Fitzpatrick III photos. It then tried 7 changes one at a time with 4-fold cross validation on the remaining data. All dark-skin runs used a Kaggle T4 GPU.</p>
+
+<h3>Prototype</h3>
+<p>A FastAPI backend has thin routes, services that hold the logic, an abstract classifier and explainer, one class per photo check, and repositories for the database. A React web app shows the class, all 7 probabilities, an uncertainty meter, the review banner with its reason, and the heatmap next to the photo. There is no login screen: the browser creates an anonymous account, and every API call still needs a token. Cases are stored in SQLite, or in PostgreSQL with Docker Compose. Every result shows the disclaimer.</p>
+
+<h2>Implementation and verification</h2>
+
+<h3>Scope alignment</h3>
+<table>
+<tr><th style="width:38%">Planned component</th><th style="width:24%">Status</th><th>Evidence</th></tr>
+<tr><td>Upload a photo (FR-01)</td><td>Completed, plus camera</td><td>frontend/src/components/</td></tr>
+<tr><td>Check format, size, resolution (FR-02)</td><td>Completed, plus blur check</td><td>backend/app/quality.py</td></tr>
+<tr><td>Classify into 7 classes (FR-03)</td><td>Completed</td><td>backend/app/ml/classifier.py</td></tr>
+<tr><td>Uncertainty and confidence (FR-04)</td><td>Completed</td><td>backend/app/ml/uncertainty.py</td></tr>
+<tr><td>Grad-CAM heatmap (FR-05)</td><td>Completed</td><td>backend/app/ml/explainer.py</td></tr>
+<tr><td>Review alert (FR-06)</td><td>Completed</td><td>backend/app/ml/review.py</td></tr>
+<tr><td>Cases stored in PostgreSQL (FR-07)</td><td>Completed, checked in Docker</td><td>docs/results/docker_postgres_check.json</td></tr>
+<tr><td>Documented REST API (FR-08)</td><td>Completed</td><td>Swagger UI at /docs</td></tr>
+<tr><td>Authentication (FR-09)</td><td>Changed: tokens kept, no login screen</td><td>backend/app/services.py</td></tr>
+<tr><td>Result within 10 seconds</td><td>Completed: about 1.5 s on CPU</td><td>docs/results/performance_*.json</td></tr>
+<tr><td>Usability study, SUS of 65 or more</td><td>Not run</td><td>docs/usability/ (kit only)</td></tr>
+</table>
+
+<h3>Testing</h3>
+<p>The backend suite has 63 tests, all passing: 45 unit tests and 18 integration tests. Unit tests cover each photo check, the review rule, password hashing, tokens and the calibration maths, using fake models where needed. Integration tests run the whole API with the real model: register, predict, case history, every rejection path, and missing or wrong tokens. The frontend has 8 unit tests for the API client. Playwright runs 8 user journeys in Chromium, Firefox, WebKit, mobile Chrome and mobile Safari: 38 passed and 2 were skipped, because WebKit has no fake camera. GitHub Actions runs the linter and all tests on Linux and Windows for every push.</p>
+<p>Input tests through the running app: a mole photo returned a result with no flag; a melanoma photo returned Melanoma with the review flag; a blurry photo returned 422; a text file returned 415; a call without a token returned 401. On the 29 locked dark-skin photos, the running app named 23 correctly and named or flagged 27 of 28 cancers. One basal cell carcinoma was called dermatofibroma without a flag.</p>
+<p>A benchmark script timed the full request, heatmap included. Warm median: 1.52 s on a 2015 laptop CPU (Intel i5-6300U), 0.61 s on a server CPU and 0.17 s on an NVIDIA T4 GPU. Peak memory was 2.2 GB on the laptop. Testing led to fixes: the blur threshold went from 60 to 5.0 after it rejected 25 of 43 real photos; a warm-up at start-up cut the first prediction from 7.9 s to 1.6 s; and the uncertainty badge now uses the same threshold as the review flag.</p>
+
+<h3>Code quality</h3>
+<p>The backend separates routes, services, the model, photo checks, security, storage and database access into their own modules. Abstract classes are used for the classifier, the explainer and the photo checks, so each part can be replaced or faked in tests. One container builds every object at start-up. Every backend module starts with a short description of its job. The ruff linter reports no findings and runs in CI. Thresholds and class names live in one model configuration file, not in the code. The repository has 42 commits, and the README links every number to its result file.</p>
+
+<h2>Results</h2>
+<table>
+<tr><th style="width:62%">Result</th><th>Value</th></tr>
+<tr><td>HAM10000 test, MobileNetV2: accuracy; macro F1; melanoma sensitivity</td><td>81.0%; 0.673; 41.8%</td></tr>
+<tr><td>HAM10000 test, EfficientNet-B3 v0: accuracy; macro F1; macro AUC; melanoma sensitivity</td><td>83.5%; 0.732; 0.963; 57.5%</td></tr>
+<tr><td>HAM10000 test, deployed v1: accuracy; macro F1; macro AUC; melanoma sensitivity</td><td>80.4%; 0.708; 0.955; 70.5%</td></tr>
+<tr><td>Balanced accuracy (macro recall), v0; v1</td><td>74.3%; 74.6%</td></tr>
+<tr><td>Review flag, v1: share flagged; accuracy not flagged; accuracy flagged</td><td>38.2%; 94.7%; 56.5%</td></tr>
+<tr><td>Review flag, v1: mistakes caught; melanomas caught counting the flag</td><td>83.6%; 93.8%</td></tr>
+<tr><td>Calibration of v0 with temperature 2.017: expected calibration error</td><td>0.095 to 0.021 (not used in the app)</td></tr>
+<tr><td>Phase 3 (phone photos): phone accuracy; benign dark-skin false alarms</td><td>34.1% to 80.2%; 1.7% to 31.2% (not deployed)</td></tr>
+<tr><td>Phase 4 (cross validation, 139 photos): dark-skin accuracy; benign dark-skin false alarms</td><td>28.1% to 81.3%; 1.7% to 38.0% (not deployed)</td></tr>
+<tr><td>Phase 4b locked test, 29 photos: dark-skin accuracy (95% interval for v1)</td><td>27.6% to 82.8% (69 to 97)</td></tr>
+<tr><td>Phase 4b locked test: dark-skin melanomas named; cancers named or flagged</td><td>36% to 73%; 92.9% to 100%</td></tr>
+<tr><td>Phase 4b locked test, 195 benign lesions: false alarms (95% interval for v1)</td><td>0.5% to 4.1% (1.6 to 6.5)</td></tr>
+<tr><td>Phase 4b rule checks passed</td><td>3 of 5</td></tr>
+</table>
+
+<h2>Discussion</h2>
+<p>On research question 1, EfficientNet-B3 classified the 7 lesion types moderately well and beat MobileNetV2 on every measure, most of all on melanoma (57.5 against 41.8 percent). Balanced accuracy of 74 percent is below the 88 to 93 percent I expected. Many published results let the same lesion appear in training and test; my split does not, so my number is lower but fair. The model trained only on HAM10000 got 28 percent on dark-skin photos, so benchmark accuracy did not carry over to the people this tool is for.</p>
+<p>On research question 2, yes. The running app shows the class, the uncertainty, the review flag with its reason, and the heatmap in about 1.5 seconds on a laptop CPU. The flag is useful: the model is 94.7 percent accurate on photos it does not flag, and the flag catches 83.6 percent of its mistakes and 93.8 percent of melanomas. That is a 6.2 percent miss rate, which meets the proposal target of under 15 percent. The cost is that 38 percent of photos go to review. The heatmaps show where the model looked, but I did not test whether this matches what a clinician would look at.</p>
+<p>On research question 3, the answer is partly. Performance on HAM10000 is acceptable for a prototype, and the tool runs on a cheap laptop and in a phone browser. Dark skin improved a lot, from 27.6 to 82.8 percent, but on only 29 web photos with no moles, so it is not proven. Phone photos were not tested on the deployed model. Usability was not measured because the study did not run before the deadline.</p>
+<p>The dark-skin work taught one clear lesson. More light-skin data made dark skin worse (Phase 3). Dark-skin cancer photos alone made the model think "dark skin means cancer" (Phase 4). Adding benign dark-skin lesions fixed most of that (Phase 4b). The deployed model failed 2 of my 5 rules: HAM10000 macro F1 fell by 0.024 against a limit of 0.01, and dark-skin false alarms rose by 3.6 points against a limit of 2. I deployed it because it finds far more cancers on dark skin and more melanomas on both test sets. Choosing after seeing results is what such a rule tries to stop, so I report it here. The first model is kept and can be switched back with two settings.</p>
+<p>Limits: no clinician tested the tool, there is no ethics approval for real patients, squamous cell carcinoma is not one of the 7 classes, and the dark-skin data is small and from the web. Next steps are consented photos from Rwandan clinics with ethics approval, a test on the Diverse Dermatology Images dataset, a usability study with health workers, and Kinyarwanda and French in the interface.</p>
 
 </body>
 </html>
