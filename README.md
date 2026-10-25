@@ -86,7 +86,8 @@ docs/usability/       SUS usability test guide and response template
 docs/report/          technical report
 docker-compose.yml    PostgreSQL + API + web, production-style setup
 MODEL_EXPLANATION.md  plain-language explanation of the whole project
-sample_images/        a few images to try the app with
+sample_images/        a few HAM10000 images to try the app with
+  dark_skin/          29 dark-skin test photos (Fitzpatrick IV-VI) the deployed model never trained on
 ```
 
 Tech: Python, PyTorch (EfficientNet-B3), Grad-CAM, FastAPI, SQLAlchemy (SQLite for development, PostgreSQL in Docker), React with Vite.
@@ -171,6 +172,8 @@ Camera notes: browsers only allow camera access on `localhost` or on an HTTPS si
 Privacy note: with no login, the app quietly creates a private anonymous account in your browser the first time you open it. Your history belongs to that browser only. Clearing your browser data removes the link to your past cases. The server still requires a token for every prediction and history request, so one visitor cannot see another visitor's cases.
 
 The sample images come from HAM10000. Two of them (`ISIC_0031939`, `ISIC_0033609`) were in the **training** set and one (`ISIC_0030440`, a melanoma) was in the **test** set. One image says nothing about accuracy. They are only there so you can try the interface.
+
+To try the app on dark skin, use the photos in `sample_images/dark_skin/`. They are the 29 locked test photos from Phase 4b (Fitzpatrick IV to VI), so the deployed model never trained on them. Each file name gives the true class and skin type, for example `mel_fitz6_4ab4fa98.jpg` is a melanoma on skin type VI. In the running app, 23 of 29 were named correctly and 27 of 28 cancers were named or flagged for review. Details and credits are in [sample_images/dark_skin/README.md](sample_images/dark_skin/README.md).
 
 ## 5. The model and its results
 
@@ -568,6 +571,7 @@ The backend follows this contract exactly: resize straight to 300 by 300 with Im
 - **ISIC Archive dark-skin benign lesions:** Memorial Sloan Kettering Cancer Center, CC BY.
 - **PAD-UFES-20:** Pacheco A G C et al., 2020, via ISIC Archive collection 406, CC BY.
 - **Sample images** in `sample_images/` are from HAM10000, for trying the interface only.
+- **Dark-skin test photos** in `sample_images/dark_skin/` were listed and labelled by Fitzpatrick17k and come from Atlas Dermatologico (atlasdermatologico.com.br). Copyright stays with their owners; source URLs are in `sample_images/dark_skin/labels.csv`. Non-commercial research and education only.
 - **Models:** EfficientNet-B3 and MobileNetV2 from torchvision, ImageNet pretrained weights.
 - **Heatmaps:** the `pytorch-grad-cam` library.
 - **Methods:** MC Dropout (Gal and Ghahramani, 2016), Grad-CAM (Selvaraju et al., 2017), temperature scaling (Guo et al., 2017), SUS (Brooke, 1996).

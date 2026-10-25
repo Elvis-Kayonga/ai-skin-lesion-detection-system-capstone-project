@@ -1,0 +1,205 @@
+[
+ {
+  "file": "mel_fitz5_051e5c8c.jpg",
+  "true": "mel",
+  "fitz": "5",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz5_5ff2e2cb.jpg",
+  "true": "bcc",
+  "fitz": "5",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "mel_fitz6_4ab4fa98.jpg",
+  "true": "mel",
+  "fitz": "6",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "mel_fitz4_8b1aac66.jpg",
+  "true": "mel",
+  "fitz": "4",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz4_ec434ee7.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "akiec",
+  "review": false
+ },
+ {
+  "file": "bcc_fitz4_3b290d26.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "bcc_fitz4_82375585.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "akiec",
+  "review": true
+ },
+ {
+  "file": "mel_fitz6_c0a31afe.jpg",
+  "true": "mel",
+  "fitz": "6",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "df_fitz4_6c696fbd.jpg",
+  "true": "df",
+  "fitz": "4",
+  "pred": "df",
+  "review": true
+ },
+ {
+  "file": "mel_fitz6_3b24865e.jpg",
+  "true": "mel",
+  "fitz": "6",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz5_94646305.jpg",
+  "true": "bcc",
+  "fitz": "5",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "mel_fitz5_5492bcfe.jpg",
+  "true": "mel",
+  "fitz": "5",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz5_aae474e9.jpg",
+  "true": "bcc",
+  "fitz": "5",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "bcc_fitz4_9e9056fd.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "bcc_fitz4_af64774e.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "bcc_fitz4_dec2d1ae.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "bcc_fitz4_296ec477.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "mel_fitz5_889a8ed4.jpg",
+  "true": "mel",
+  "fitz": "5",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz4_de24cc0b.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "bcc_fitz4_5e7d0cf1.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "mel_fitz4_fd1fa18a.jpg",
+  "true": "mel",
+  "fitz": "4",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz6_91c13b3c.jpg",
+  "true": "bcc",
+  "fitz": "6",
+  "pred": "bcc",
+  "review": true
+ },
+ {
+  "file": "mel_fitz4_29a86d89.jpg",
+  "true": "mel",
+  "fitz": "4",
+  "pred": "mel",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz4_185942f8.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "df",
+  "review": false
+ },
+ {
+  "file": "bcc_fitz6_a1d96dfd.jpg",
+  "true": "bcc",
+  "fitz": "6",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "mel_fitz4_74c640f2.jpg",
+  "true": "mel",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz4_4981320e.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ },
+ {
+  "file": "mel_fitz4_30b3bb79.jpg",
+  "true": "mel",
+  "fitz": "4",
+  "pred": "df",
+  "review": true
+ },
+ {
+  "file": "bcc_fitz4_10cbd07a.jpg",
+  "true": "bcc",
+  "fitz": "4",
+  "pred": "bcc",
+  "review": false
+ }
+]
