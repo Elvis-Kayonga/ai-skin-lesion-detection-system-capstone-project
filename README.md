@@ -65,7 +65,7 @@ Requirements from my proposal and where they stand:
 | Balanced accuracy 88 to 93% on HAM10000 | 74.6% (macro recall, deployed model) | No |
 | Melanoma false-negative rate below 15% | 6.2% when the review flag counts as a catch | Yes, with the flag |
 | Result within 10 seconds | About 1.5 s on a laptop CPU | Yes |
-| Usability (SUS) of 65 or more | Study kit ready, sessions not yet run | Pending |
+| Usability (SUS) of 65 or more | Study kit ready, but the sessions could not be run before the deadline | Not measured |
 
 ## 2. What is in this repo
 
@@ -372,7 +372,7 @@ The 10-second target from my proposal is met on every machine. To run the model 
 
 ### 7.3 Usability
 
-The usability study kit is in `docs/usability/`: tasks, the standard System Usability Scale (SUS) questionnaire, a response template and a scoring script (`backend/scripts/sus_score.py`). Target: mean SUS of 65 or more. Status: sessions not yet run, so there is no SUS result yet.
+The usability study kit is in `docs/usability/`: tasks, the standard System Usability Scale (SUS) questionnaire, a response template and a scoring script (`backend/scripts/sus_score.py`). Target: mean SUS of 65 or more. Status: I could not run the sessions before the submission deadline, so there is no SUS result and the usability target is not verified. The kit is ready for anyone to run: follow `docs/usability/SUS_test_guide.md`, fill in a copy of the template, then run `python backend/scripts/sus_score.py docs/usability/sus_responses.csv`.
 
 ## 8. Setbacks and challenges
 
