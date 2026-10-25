@@ -6,8 +6,9 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from app.ml import calibration as cal  # noqa: E402
 import calibrate  # noqa: E402
+
+from app.ml import calibration as cal  # noqa: E402
 
 rng = np.random.default_rng(0)
 

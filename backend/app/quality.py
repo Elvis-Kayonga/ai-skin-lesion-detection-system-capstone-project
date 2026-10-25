@@ -29,7 +29,7 @@ class Upload:
             img.load()
             return img.convert("RGB")
         except (UnidentifiedImageError, OSError):
-            raise ImageRejected("The file could not be read as an image.", status_code=400)
+            raise ImageRejected("The file could not be read as an image.", status_code=400) from None
 
 
 class QualityCheck(ABC):
@@ -61,7 +61,7 @@ class DecodableCheck(QualityCheck):
     """Fails with 400 when the bytes are not a real image (decoding happens inside `Upload.image`)."""
 
     def check(self, upload: Upload) -> None:
-        upload.image
+        _ = upload.image   # decoding raises ImageRejected if the bytes are not an image
 
 
 class ResolutionCheck(QualityCheck):

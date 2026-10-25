@@ -1,3 +1,4 @@
+"""Database tables: users, cases, classification_results and explainability_maps."""
 from datetime import datetime, timezone
 
 from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Integer, String

@@ -1,11 +1,18 @@
 """Unit tests for the upload quality rules (each rule on its own, then the validator that chains them)."""
 import pytest
-
 from conftest import blurry_image, jpeg_bytes, png_bytes, textured_image
 
 from app.core.errors import ImageRejected
-from app.quality import (BlurCheck, DecodableCheck, FileSizeCheck, FileTypeCheck, ImageValidator,
-                         QualityCheck, ResolutionCheck, Upload)
+from app.quality import (
+    BlurCheck,
+    DecodableCheck,
+    FileSizeCheck,
+    FileTypeCheck,
+    ImageValidator,
+    QualityCheck,
+    ResolutionCheck,
+    Upload,
+)
 
 GOOD_JPEG = jpeg_bytes(textured_image())
 

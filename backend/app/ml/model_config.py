@@ -1,6 +1,6 @@
 """The model contract produced by the training notebook (`model_config.json`), as a typed object."""
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -15,7 +15,6 @@ class ModelConfig:
     entropy_threshold: float
     melanoma_flag_threshold: float
     melanoma_index: int
-    raw: dict = field(default_factory=dict, repr=False, compare=False)   # everything else in the file
 
     @classmethod
     def from_file(cls, path: Path) -> "ModelConfig":
@@ -30,7 +29,6 @@ class ModelConfig:
             entropy_threshold=float(cfg["entropy_threshold"]),
             melanoma_flag_threshold=float(cfg["melanoma_flag_threshold"]),
             melanoma_index=int(cfg["melanoma_index"]),
-            raw=cfg,
         )
 
     @property

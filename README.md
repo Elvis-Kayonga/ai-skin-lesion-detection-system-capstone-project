@@ -445,13 +445,14 @@ It passed the other three: melanoma sensitivity on HAM10000 did not drop (it ros
 | Backend unit and integration (pytest, `backend/tests`) | Each upload check, the review rule, password hashing and tokens, services with fake models, calibration maths, SUS scoring, and 18 API tests through the whole app | 63 passed |
 | Frontend unit (Vitest) | The API client: tokens, error messages, session recovery and retry | 8 passed |
 | End to end (Playwright, `frontend/e2e`) | 8 user journeys in Chromium, Firefox, WebKit, mobile Chrome and mobile Safari | 38 passed, 2 skipped (camera test needs a fake camera, which WebKit does not have) |
-| Continuous integration (`.github/workflows/tests.yml`) | All of the above on every push | Linux and Windows |
+| Code style (ruff, `backend/ruff.toml`) | Unused code, import order, naming, common bug patterns | No warnings |
+| Continuous integration (`.github/workflows/tests.yml`) | The linter and all of the above on every push | Linux and Windows |
 | Docker smoke test (`backend/scripts/smoke_test.py`) | Health, register, predict, history against the Docker stack with PostgreSQL | Passed |
 
 Run them yourself:
 
 ```powershell
-cd backend; .venv\Scripts\python -m pytest -q
+cd backend; .venv\Scripts\python -m ruff check .; .venv\Scripts\python -m pytest -q
 cd frontend; npx vitest run; npx playwright test
 ```
 

@@ -1,3 +1,4 @@
+"""Account routes: register and log in (both return a JWT access token)."""
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 

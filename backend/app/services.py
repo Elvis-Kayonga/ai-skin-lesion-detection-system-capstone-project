@@ -103,7 +103,7 @@ class ScreeningService:
         fields = dict(
             predicted_class=cfg.class_codes[top],
             class_name=cfg.class_names[top],
-            probabilities={c: float(v) for c, v in zip(cfg.class_codes, prediction.probabilities)},
+            probabilities={c: float(v) for c, v in zip(cfg.class_codes, prediction.probabilities, strict=True)},
             entropy=prediction.entropy,
             review_recommended=decision.recommended,
             review_reason=decision.reason,

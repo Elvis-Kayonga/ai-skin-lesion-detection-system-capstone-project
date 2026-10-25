@@ -1,3 +1,4 @@
+"""Database engine and session factory (SQLite by default, PostgreSQL via DATABASE_URL)."""
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 

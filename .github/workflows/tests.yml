@@ -26,6 +26,9 @@ jobs:
           python -m pip install --upgrade pip
           pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
           pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+      - name: Lint (ruff)
+        working-directory: backend
+        run: python -m ruff check .
       - name: Unit and integration tests (real model)
         working-directory: backend
         run: python -m pytest -q

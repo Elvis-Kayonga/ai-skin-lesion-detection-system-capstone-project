@@ -1,3 +1,4 @@
+"""Screening route: POST /predict takes a photo and returns the full result."""
 from fastapi import APIRouter, Depends, File, UploadFile
 
 from ... import models, schemas

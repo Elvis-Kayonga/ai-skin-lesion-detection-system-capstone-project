@@ -48,8 +48,8 @@ def summary(ms):
 
 
 def environment():
-    import torch
     import fastapi
+    import torch
     cpu = platform.processor()
     try:
         if os.name == "nt":
@@ -57,8 +57,8 @@ def environment():
             key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"HARDWARE\DESCRIPTION\System\CentralProcessor\0")
             cpu = winreg.QueryValueEx(key, "ProcessorNameString")[0].strip()
         elif Path("/proc/cpuinfo").exists():
-            cpu = next(l.split(":", 1)[1].strip() for l in Path("/proc/cpuinfo").read_text().splitlines()
-                       if l.startswith("model name"))
+            cpu = next(line.split(":", 1)[1].strip() for line in Path("/proc/cpuinfo").read_text().splitlines()
+                       if line.startswith("model name"))
     except Exception:
         pass
     return {

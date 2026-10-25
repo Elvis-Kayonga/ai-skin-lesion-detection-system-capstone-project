@@ -1,3 +1,4 @@
+"""System route: GET /health reports whether the server is up and the model is loaded."""
 from fastapi import APIRouter, Depends
 
 from ...container import AppContainer

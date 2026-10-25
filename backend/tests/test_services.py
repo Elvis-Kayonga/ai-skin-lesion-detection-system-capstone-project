@@ -8,10 +8,16 @@ from types import SimpleNamespace
 
 import numpy as np
 import pytest
-
 from conftest import jpeg_bytes, textured_image
 
-from app.core.errors import AuthenticationFailed, Conflict, ImageRejected, InvalidInput, ModelNotReady, NotFound
+from app.core.errors import (
+    AuthenticationFailed,
+    Conflict,
+    ImageRejected,
+    InvalidInput,
+    ModelNotReady,
+    NotFound,
+)
 from app.ml.classifier import LesionClassifier, Prediction
 from app.ml.explainer import Explainer
 from app.ml.model_config import ModelConfig

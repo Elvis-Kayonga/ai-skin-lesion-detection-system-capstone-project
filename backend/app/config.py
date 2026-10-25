@@ -1,3 +1,4 @@
+"""Settings read from environment variables or backend/.env (secrets are never hard-coded)."""
 from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict

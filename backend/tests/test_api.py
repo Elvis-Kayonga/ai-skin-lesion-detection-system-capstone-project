@@ -9,10 +9,9 @@ import io
 import uuid
 
 import pytest
+from conftest import blurry_image, jpeg_bytes, png_bytes, textured_image
 from fastapi.testclient import TestClient
 from PIL import Image
-
-from conftest import blurry_image, jpeg_bytes, png_bytes, textured_image
 
 from app.main import app  # noqa: E402  (imported after conftest has set the environment)
 

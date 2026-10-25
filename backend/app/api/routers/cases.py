@@ -1,3 +1,4 @@
+"""Case history routes: list the current user's cases and reopen one with its heatmap."""
 from fastapi import APIRouter, Depends
 
 from ... import models, schemas

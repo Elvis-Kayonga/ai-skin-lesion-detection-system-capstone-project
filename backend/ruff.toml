@@ -1,0 +1,14 @@
+# Linting rules for the backend. Run from backend/:  python -m ruff check .
+line-length = 132
+target-version = "py310"
+
+[lint]
+# Pyflakes (bugs, unused code), pycodestyle, import order, naming, bugbear, modern Python
+select = ["F", "E", "W", "I", "N", "B", "UP"]
+ignore = [
+    "B008",   # FastAPI's dependency injection uses Depends(...) as a default argument by design
+    "N818",   # domain errors are named for what happened (ImageRejected, NotFound), not "...Error"
+    "N812",   # "import torch.nn.functional as F" is the standard PyTorch convention
+    "N806",   # T is the standard symbol for the calibration temperature
+    "UP017",  # keep timezone.utc, it reads clearly and works on Python 3.10
+]

@@ -148,7 +148,7 @@ def main() -> None:
     print_table("Calibration (before = T 1, after = fitted T)",
                 [dict(split=s, when=w, **calib[s][w]) for s in calib for w in ("before", "after")],
                 ["split", "when", "ece", "nll", "accuracy"])
-    p_val_1, p_val_T = cal.mc_probabilities(val["logits"], 1.0), cal.mc_probabilities(val["logits"], T)
+    p_val_T = cal.mc_probabilities(val["logits"], T)
     p_test_1, p_test_T = cal.mc_probabilities(test["logits"], 1.0), cal.mc_probabilities(test["logits"], T)
     save_reliability_diagram(cfg.figures_dir / "reliability_diagram_test.png", p_test_1, p_test_T, test["labels"], T, cfg.ece_bins)
 

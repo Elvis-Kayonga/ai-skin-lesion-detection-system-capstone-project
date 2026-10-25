@@ -1,6 +1,5 @@
 """Unit tests for the review rule, the uncertainty measure, password hashing and tokens."""
 import math
-import time
 
 import numpy as np
 import pytest

@@ -38,4 +38,4 @@ class TokenService:
         try:
             return int(jwt.decode(token, self._secret, algorithms=[self.ALGORITHM])["sub"])
         except (jwt.PyJWTError, ValueError, KeyError):
-            raise AuthenticationFailed(self.INVALID)
+            raise AuthenticationFailed(self.INVALID) from None
