@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 from .api.routers import auth, cases, screening, system
 from .config import Settings, settings
@@ -43,6 +44,9 @@ def create_app(config: Settings = settings) -> FastAPI:
 
     for router in (system.router, auth.router, screening.router, cases.router):
         app.include_router(router)
+    if config.frontend_dir and config.frontend_dir.is_dir():
+        # Mounted last, so every API route above keeps priority over the static files.
+        app.mount("/", StaticFiles(directory=config.frontend_dir, html=True), name="web")
     return app
 
 

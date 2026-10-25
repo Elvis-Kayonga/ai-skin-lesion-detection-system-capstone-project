@@ -17,6 +17,9 @@ class Settings(BaseSettings):
     weights_file: str = "efficientnet_b3_best.pth"
     config_file: str = "model_config.json"
     storage_dir: Path = BASE_DIR / "storage"
+    # Optional: folder with the built web app (frontend/dist). When set, the API also serves the web app,
+    # so the whole system runs behind one address (used for the online demo).
+    frontend_dir: Path | None = None
 
     cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
 
