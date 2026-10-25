@@ -1,0 +1,68 @@
+flowchart TB
+    U(["Health worker<br/>phone or laptop browser"])
+
+    subgraph CLIENT["CLIENT LAYER  |  React 18 + Vite"]
+        direction LR
+        UI["Screen / History / Limitations<br/><i>Upload, Camera, ResultCard</i>"]
+        HOOKS["State hooks<br/><i>useSession, useCaseHistory</i>"]
+        API_C["ApiClient<br/><i>JWT, retry, error messages</i>"]
+        LS[("localStorage<br/><i>anonymous guest account</i>")]
+        UI --> HOOKS --> API_C --> LS
+    end
+
+    subgraph SERVER["API LAYER  |  FastAPI + Swagger UI at /docs"]
+        direction LR
+        R1["GET /health"]
+        R2["POST /auth/register<br/>POST /auth/login"]
+        R3["POST /predict"]
+        R4["GET /cases<br/>GET /cases/{id}"]
+        R1 ~~~ R2 ~~~ R3 ~~~ R4
+    end
+
+    subgraph SERVICES["SERVICE LAYER"]
+        direction LR
+        AUTH["AuthService<br/><i>bcrypt passwords, JWT tokens</i>"]
+        SCREEN["ScreeningService<br/><i>validate, classify, explain,<br/>decide review, store</i>"]
+        AUTH ~~~ SCREEN
+    end
+
+    subgraph ML["ML AND DOMAIN LAYER"]
+        direction LR
+        VAL["ImageValidator<br/><i>type, size, decodable,<br/>resolution, blur</i>"]
+        CLF["EfficientNetClassifier<br/><i>EfficientNet-B3<br/>MC Dropout x10, entropy</i>"]
+        CAM["GradCamExplainer<br/><i>heatmap of the top class</i>"]
+        REV["ReviewPolicy<br/><i>entropy >= threshold<br/>OR P(melanoma) >= 5%</i>"]
+        VAL --> CLF --> CAM --> REV
+    end
+
+    subgraph DATA["DATA LAYER"]
+        direction LR
+        DB[("SQLite (dev) / PostgreSQL 16 (Docker)<br/><i>users, cases, classification_results,<br/>explainability_maps</i>")]
+        FS[("File storage<br/><i>photo + heatmap PNG</i>")]
+        MODEL[["Model files<br/><i>v1 dark-skin fine-tune (deployed)<br/>v0 HAM10000 only (fallback)</i>"]]
+        DB ~~~ FS ~~~ MODEL
+    end
+
+    U --> CLIENT
+    CLIENT == "HTTPS + JSON, Bearer JWT, multipart photo" ==> SERVER
+    SERVER --> SERVICES
+    SERVICES --> ML
+    ML --> DATA
+
+    classDef client fill:#e0f2fe,stroke:#0369a1,color:#0c4a6e
+    classDef api fill:#ede9fe,stroke:#6d28d9,color:#3b0764
+    classDef svc fill:#dcfce7,stroke:#15803d,color:#14532d
+    classDef ml fill:#fef3c7,stroke:#b45309,color:#78350f
+    classDef data fill:#f1f5f9,stroke:#475569,color:#0f172a
+    classDef user fill:#ffffff,stroke:#0f766e,color:#134e4a,stroke-width:2px
+    class UI,HOOKS,API_C,LS client
+    class R1,R2,R3,R4 api
+    class AUTH,SCREEN svc
+    class VAL,CLF,REV,CAM ml
+    class DB,FS,MODEL data
+    class U user
+    style CLIENT fill:#f0f9ff,stroke:#0369a1
+    style SERVER fill:#f5f3ff,stroke:#6d28d9
+    style SERVICES fill:#f0fdf4,stroke:#15803d
+    style ML fill:#fffbeb,stroke:#b45309
+    style DATA fill:#f8fafc,stroke:#475569

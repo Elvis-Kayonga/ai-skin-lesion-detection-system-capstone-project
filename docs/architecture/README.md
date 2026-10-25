@@ -6,6 +6,7 @@ These diagrams show the system **as it is built** in this repository, not as it 
 
 | # | Diagram | Answers the question |
 |---|---|---|
+| 0 | [Layered overview](#0-layered-overview) | The whole system in five layers (also shown in the main README) |
 | 1 | [System overview](#1-system-overview) | What are the parts and how do they talk to each other? |
 | 2 | [Screening request, step by step](#2-screening-request-step-by-step) | What happens when someone presses "Analyse image"? |
 | 3 | [Backend classes](#3-backend-classes) | How is the backend code organised? |
@@ -14,6 +15,12 @@ These diagrams show the system **as it is built** in this repository, not as it 
 | 6 | [Deployment options](#6-deployment-options) | Where and how does it run? |
 
 ---
+
+## 0. Layered overview
+
+![Layered overview](00_layered_overview.png)
+
+The same system grouped into five layers, from the browser down to the data. Each layer only talks to the one below it. Inside the ML layer, the boxes are in the order `ScreeningService` calls them: check the photo, classify it, draw the heatmap, then apply the review rule. The main README shows this diagram as live Mermaid, which GitHub draws itself.
 
 ## 1. System overview
 
