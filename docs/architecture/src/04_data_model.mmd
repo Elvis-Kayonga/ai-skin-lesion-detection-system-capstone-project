@@ -1,0 +1,34 @@
+erDiagram
+    users ||--o{ cases : "has"
+    cases ||--|| classification_results : "has one"
+    cases ||--|| explainability_maps : "has one"
+
+    users {
+        int id PK
+        string email UK "random guest address from the web app"
+        string password_hash "bcrypt"
+        datetime created_at
+    }
+    cases {
+        int id PK
+        int user_id FK
+        string image_path "photo saved by ImageStore"
+        datetime created_at
+    }
+    classification_results {
+        int id PK
+        int case_id FK "unique"
+        string predicted_class "akiec, bcc, bkl, df, mel, nv, vasc"
+        string class_name
+        json probabilities "all 7 classes"
+        float entropy
+        bool review_recommended
+        string review_reason
+        string model_version
+        int inference_ms
+    }
+    explainability_maps {
+        int id PK
+        int case_id FK "unique"
+        string heatmap_path "Grad-CAM PNG"
+    }

@@ -1,0 +1,32 @@
+flowchart LR
+    subgraph DEV["1. Local development (README Section 3)"]
+        direction TB
+        vite["Vite dev server<br/>localhost:5173"]
+        uv["uvicorn + FastAPI<br/>localhost:8000"]
+        sqlite[("SQLite file<br/>backend/skin_screening.db")]
+        disk1[("backend/storage")]
+        vite -- "API calls" --> uv
+        uv --> sqlite
+        uv --> disk1
+    end
+
+    subgraph DOCKER["2. Docker Compose (verified 23 Oct 2026)"]
+        direction TB
+        web["web container<br/>nginx serving the React build<br/>localhost:8080"]
+        api["api container<br/>python 3.11 + CPU PyTorch<br/>localhost:8000"]
+        pg[("db container<br/>PostgreSQL 16, volume pgdata")]
+        up[("volume uploads")]
+        web -- "API calls" --> api
+        api --> pg
+        api --> up
+    end
+
+    subgraph SPACE["3. Single container (prepared, not hosted yet)"]
+        direction TB
+        one["deploy/huggingface/Dockerfile<br/>FastAPI serves the API AND the web app<br/>one address, port 7860"]
+        tmp[("SQLite + uploads in /tmp<br/>wiped on restart")]
+        one --> tmp
+    end
+
+    ci["GitHub Actions CI<br/>pytest, Vitest, Playwright<br/>Linux and Windows"]
+    ci -. "tests every push" .-> DEV

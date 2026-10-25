@@ -1,0 +1,40 @@
+flowchart TB
+    user(["Health worker<br/>phone or laptop browser"])
+
+    subgraph FE["Frontend: React 18 + Vite (frontend/src)"]
+        direction TB
+        app["App.jsx<br/>tabs: Screen, History, Limitations"]
+        comps["Components<br/>Upload, Camera, ResultCard,<br/>History, Limitations"]
+        hooks["Hooks<br/>useSession, useCaseHistory"]
+        client["ApiClient + SessionStore<br/>adds JWT, retries, error messages"]
+        ls[("Browser localStorage<br/>anonymous guest credentials")]
+        app --> comps --> hooks --> client
+        client <--> ls
+    end
+
+    subgraph BE["Backend: FastAPI (backend/app)"]
+        direction TB
+        routes["API routes<br/>/health, /auth, /predict, /cases"]
+        svc["Services<br/>AuthService, ScreeningService"]
+        quality["ImageValidator<br/>type, size, decodable,<br/>resolution, blur checks"]
+        ml["ML layer<br/>EfficientNetClassifier (MC Dropout x10)<br/>ReviewPolicy, GradCamExplainer"]
+        sec["Security<br/>PasswordHasher (bcrypt), TokenService (JWT)"]
+        repo["Repositories<br/>UserRepository, CaseRepository"]
+        store["ImageStore"]
+        routes --> svc
+        svc --> quality
+        svc --> ml
+        svc --> sec
+        svc --> repo
+        svc --> store
+    end
+
+    model[["Model files<br/>backend/model: v1 dark-skin fine-tune<br/>backend/model/original: v0 fallback"]]
+    db[("Database<br/>SQLite (development)<br/>PostgreSQL 16 (Docker)")]
+    files[("File storage<br/>photo + heatmap PNG per case")]
+
+    user --> app
+    client -- "HTTPS / JSON + JWT<br/>multipart photo upload" --> routes
+    ml -. "loads once at start-up" .-> model
+    repo --> db
+    store --> files

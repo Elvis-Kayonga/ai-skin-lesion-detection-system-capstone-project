@@ -1,0 +1,41 @@
+sequenceDiagram
+    autonumber
+    actor U as Health worker
+    participant FE as React app (ApiClient)
+    participant API as FastAPI POST /predict
+    participant AUTH as AuthService + TokenService
+    participant SS as ScreeningService
+    participant IV as ImageValidator
+    participant CL as EfficientNetClassifier
+    participant RP as ReviewPolicy
+    participant GC as GradCamExplainer
+    participant ST as ImageStore
+    participant DB as CaseRepository (SQL)
+
+    U->>FE: choose or take a photo, press Analyse
+    FE->>API: multipart image + Bearer JWT
+    API->>AUTH: verify token, load user
+    AUTH-->>API: user (or 401)
+    API->>SS: screen(user, content type, bytes)
+    SS->>IV: validate
+    alt photo fails a check
+        IV-->>SS: ImageRejected (415 / 413 / 400 / 422)
+        SS-->>FE: {"detail": clear message}
+        FE-->>U: error box, no result
+    else photo accepted
+        IV-->>SS: PIL image
+        SS->>CL: predict(image)
+        Note over CL: resize to 300x300, ImageNet normalisation<br/>backbone once, classifier head 10x with dropout on<br/>average softmax, entropy = -sum p log p
+        CL-->>SS: 7 probabilities, entropy, top class
+        SS->>GC: explain(image, top class)
+        Note over GC: Grad-CAM on features[-1]
+        GC-->>SS: heatmap PNG
+        SS->>RP: decide(probabilities, entropy)
+        Note over RP: review if entropy >= threshold<br/>OR P(melanoma) >= 0.05
+        RP-->>SS: review flag + reason
+        SS->>ST: save photo and heatmap
+        SS->>DB: insert case, classification_result, explainability_map
+        SS-->>API: ScreeningResult
+        API-->>FE: JSON: class, probabilities, entropy, threshold,<br/>review flag, heatmap, model version, disclaimer, time
+        FE-->>U: result card, uncertainty meter, banner, heatmap
+    end

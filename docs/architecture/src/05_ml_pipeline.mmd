@@ -1,0 +1,27 @@
+flowchart TB
+    subgraph COLAB["Google Colab, T4 GPU: notebooks/skin_lesion_training.ipynb"]
+        ham[("HAM10000<br/>10,015 dermoscopy images, 7 classes")]
+        split["Split by lesion<br/>train 7,116 / val 1,458 / test 1,441"]
+        train["Train EfficientNet-B3 and MobileNetV2<br/>ImageNet weights, class-weighted loss,<br/>AdamW, cosine schedule, early stopping"]
+        thr["Choose thresholds on validation<br/>entropy 80th percentile, melanoma 0.05"]
+        v0[["v0 model + model_config.json<br/>backend/model/original"]]
+        ham --> split --> train --> thr --> v0
+    end
+
+    subgraph KAGGLE["Kaggle, T4 GPU: experiments (each with a pass/fail rule written before the run)"]
+        p3["Phase 3: + PAD-UFES-20 phone photos<br/>dark-skin false alarms 1.7% to 31.2%<br/>NOT deployed"]
+        p4["Phase 4: + Fitzpatrick17k IV-VI (139 photos)<br/>5-fold CV, dark-skin accuracy 28% to 81%<br/>but 38% false alarms: NOT deployed"]
+        lock["Phase 4b: lock 29 dark-skin photos<br/>and 10 benign patients for a one-time test"]
+        tune["Tune one change at a time (4-fold CV)<br/>+ 215 benign dark-skin lesions, 'not cancer' loss<br/>+ 118 Fitzpatrick III photos"]
+        final["Train final recipe, test once<br/>dark skin 28% to 83%, false alarms 4.1%<br/>rule failed 2 of 5, deployed by decision"]
+        p3 --> p4 --> lock --> tune --> final
+    end
+
+    v1[["v1 model + model_config.json<br/>backend/model (deployed)"]]
+    app["FastAPI backend<br/>EfficientNetClassifier loads v1 at start-up"]
+
+    v0 --> p3
+    v0 --> p4
+    v0 --> tune
+    final --> v1 --> app
+    v0 -. "fallback: MODEL_DIR=model/original" .-> app

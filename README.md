@@ -27,7 +27,7 @@ Links:
 ## Contents
 
 1. [Project status at a glance](#1-project-status-at-a-glance)
-2. [What is in this repo](#2-what-is-in-this-repo)
+2. [What is in this repo](#2-what-is-in-this-repo) (and [2.1 System architecture](#21-system-architecture))
 3. [Quick start](#3-quick-start)
 4. [How to use the app](#4-how-to-use-the-app)
 5. [The model and its results](#5-the-model-and-its-results)
@@ -84,6 +84,8 @@ docs/figures/         charts
 docs/screenshots/     screenshots of the running app
 docs/usability/       SUS usability test guide and response template
 docs/report/          technical report
+docs/architecture/    system architecture diagrams (Section 2.1) and their Mermaid sources
+deploy/huggingface/   single-container setup for hosting online (prepared, not hosted yet)
 docker-compose.yml    PostgreSQL + API + web, production-style setup
 MODEL_EXPLANATION.md  plain-language explanation of the whole project
 sample_images/        a few HAM10000 images to try the app with
@@ -93,6 +95,27 @@ sample_images/        a few HAM10000 images to try the app with
 Tech: Python, PyTorch (EfficientNet-B3), Grad-CAM, FastAPI, SQLAlchemy (SQLite for development, PostgreSQL in Docker), React with Vite.
 
 Tested with: Python 3.12.6, Node.js 20.18, PyTorch 2.14.1 (CPU), FastAPI 0.142.2, React 18.3, Vite 5.4, Vitest 2.1.9, Playwright 1.49, Docker Desktop 29.3.1, PostgreSQL 16.15.
+
+### 2.1 System architecture
+
+This is the system as it is actually built. The full set of diagrams, with an explanation of each and the design choices behind them, is in **[docs/architecture/](docs/architecture/README.md)**.
+
+![System architecture overview](docs/architecture/01_system_overview.png)
+
+In short:
+
+- **Frontend** (React with Vite): three tabs (Screen, History, Limitations). All network calls go through one `ApiClient`, which adds the access token and keeps an anonymous account in the browser.
+- **Backend** (FastAPI): thin routes call `ScreeningService` and `AuthService`. Each job is its own object: `ImageValidator` (5 photo checks), `EfficientNetClassifier` (MC Dropout), `ReviewPolicy` (the review rule), `GradCamExplainer` (heatmap), `ImageStore` (files) and the repositories (database). `AppContainer` builds them once at start-up.
+- **Data:** SQLite in development, PostgreSQL 16 in Docker; photos and heatmaps as files; the model loaded once from `backend/model`.
+
+| Diagram | Shows |
+|---|---|
+| [System overview](docs/architecture/01_system_overview.png) | The parts and how they talk |
+| [Screening request](docs/architecture/02_predict_sequence.png) | Every step from "Analyse image" to the result, including rejections |
+| [Backend classes](docs/architecture/03_backend_classes.png) | Classes, interfaces and design patterns |
+| [Data model](docs/architecture/04_data_model.png) | The 4 database tables |
+| [Machine learning pipeline](docs/architecture/05_ml_pipeline.png) | From HAM10000 training to the deployed dark-skin model |
+| [Deployment options](docs/architecture/06_deployment.png) | Local, Docker Compose and the single-container setup |
 
 ## 3. Quick start
 
@@ -483,6 +506,8 @@ Each prediction returns: `case_id`, `predicted_class`, `class_name`, `probabilit
 Try it in Swagger UI: open `/docs`, use `/auth/register` to create an account, click **Authorize** and enter the same email and password, then try `/predict`. The web app does all of this for you in the background.
 
 ### Code structure (backend)
+
+Diagrams of these classes and of a full request are in [docs/architecture/](docs/architecture/README.md).
 
 - **Routes** (`app/api/routers`) only translate HTTP to service calls.
 - **Services** (`app/services.py`): `AuthService` and `ScreeningService` hold the logic: validate, classify, explain, decide review, store.

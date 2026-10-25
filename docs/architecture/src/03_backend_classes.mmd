@@ -1,0 +1,99 @@
+classDiagram
+    direction LR
+    class AppContainer {
+        +settings
+        +validator: ImageValidator
+        +classifier: LesionClassifier
+        +explainer: Explainer
+        +store: ImageStore
+        +hasher: PasswordHasher
+        +tokens: TokenService
+        +start()
+        +warm_up()
+    }
+    class AuthService {
+        +register(email, password) token
+        +login(email, password) token
+        +authenticate(token) User
+    }
+    class ScreeningService {
+        +screen(user_id, content_type, data) ScreeningResult
+        +get_case(user_id, case_id) ScreeningResult
+        +list_cases(user_id) CaseOverview[]
+    }
+    class ImageValidator {
+        +checks: QualityCheck[]
+        +validate(content_type, data) Image
+    }
+    class QualityCheck {
+        <<abstract>>
+        +check(upload)
+    }
+    class FileTypeCheck
+    class FileSizeCheck
+    class DecodableCheck
+    class ResolutionCheck
+    class BlurCheck
+    class LesionClassifier {
+        <<abstract>>
+        +load()
+        +predict(image) Prediction
+        +ready: bool
+        +config: ModelConfig
+    }
+    class EfficientNetClassifier {
+        +predict(image) MC Dropout x10
+    }
+    class Explainer {
+        <<abstract>>
+        +explain(image, class_index) png
+    }
+    class GradCamExplainer
+    class ReviewPolicy {
+        +entropy_threshold
+        +melanoma_threshold
+        +decide(probabilities, entropy) ReviewDecision
+    }
+    class ModelConfig
+    class UserRepository {
+        +get() +get_by_email() +add()
+    }
+    class CaseRepository {
+        +add() +list_for_user() +get_for_user()
+    }
+    class ImageStore {
+        +save_case_files() +read()
+    }
+    class PasswordHasher {
+        +hash() +verify()
+    }
+    class TokenService {
+        +issue(user_id) +user_id_from(token)
+    }
+
+    QualityCheck <|-- FileTypeCheck
+    QualityCheck <|-- FileSizeCheck
+    QualityCheck <|-- DecodableCheck
+    QualityCheck <|-- ResolutionCheck
+    QualityCheck <|-- BlurCheck
+    LesionClassifier <|-- EfficientNetClassifier
+    Explainer <|-- GradCamExplainer
+    ImageValidator o-- QualityCheck
+    EfficientNetClassifier --> ModelConfig
+    GradCamExplainer --> EfficientNetClassifier : uses its network
+    ReviewPolicy ..> ModelConfig : from_config
+    ScreeningService --> ImageValidator
+    ScreeningService --> LesionClassifier
+    ScreeningService --> Explainer
+    ScreeningService --> ReviewPolicy
+    ScreeningService --> ImageStore
+    ScreeningService --> CaseRepository
+    AuthService --> UserRepository
+    AuthService --> PasswordHasher
+    AuthService --> TokenService
+    AppContainer *-- ImageValidator
+    AppContainer *-- LesionClassifier
+    AppContainer *-- Explainer
+    AppContainer *-- ImageStore
+    AppContainer *-- PasswordHasher
+    AppContainer *-- TokenService
