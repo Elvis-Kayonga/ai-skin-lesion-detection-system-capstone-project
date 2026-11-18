@@ -80,6 +80,13 @@ test("shows the full limitations panel", async ({ page }) => {
   await expect(page.getByText(/Fitzpatrick V to VI/)).toBeVisible();
 });
 
+test("shows the privacy policy and terms of use", async ({ page }) => {
+  await openApp(page);
+  await page.getByRole("button", { name: "Privacy", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Privacy Policy and Terms of Use" })).toBeVisible();
+  await expect(page.getByText(/do not ask for or store your name/)).toBeVisible();
+});
+
 test("takes a photo with the camera and analyses it", async ({ page, browserName }) => {
   test.skip(browserName === "webkit", "WebKit has no fake camera for automated tests");
   await openApp(page);

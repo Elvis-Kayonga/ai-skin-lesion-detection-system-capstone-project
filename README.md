@@ -270,7 +270,7 @@ There is no login screen. Open http://localhost:5173 and you are straight in.
 2. Click **Analyse image**.
 3. Read the result card: most likely class, uncertainty meter, probability bars, and the heatmap next to your photo.
 4. Try `blurry_example_will_be_rejected.jpg` and `not_an_image_will_be_rejected.txt` from `sample_images/` to see the quality checks reject bad input with a clear message.
-5. Open **History** to see past cases, and **Limitations** for the full limitations panel. A short version is also shown on the main screen.
+5. Open **History** to see past cases, **Limitations** for the full limitations panel (a short version is also shown on the main screen), and **Privacy** for the Privacy Policy and Terms of Use.
 
 Camera notes: browsers only allow camera access on `localhost` or on an HTTPS site, and you must click Allow when asked. On a phone without in-page camera support, **Take a photo** opens the phone's own camera instead. If the camera is blocked, the app says so and you can upload a photo instead.
 
@@ -675,7 +675,7 @@ The backend follows this contract exactly: resize straight to 300 by 300 with Im
 ## 15. Data, licences and credits
 
 - **HAM10000:** Tschandl P, Rosendahl C, Kittler H. Scientific Data, 2018. CC BY-NC 4.0.
-- **Fitzpatrick17k:** Groh M et al., 2021. CC BY-NC-SA 3.0. Images are downloaded from their original sources and never stored in this repo.
+- **Fitzpatrick17k:** Groh M et al., 2021. CC BY-NC-SA 3.0. The training images are downloaded from their original sources and are not stored in this repo. The only exception is the 29 locked test photos in `sample_images/dark_skin/`, kept for non-commercial research and education with credits and source URLs (see below).
 - **ISIC Archive dark-skin benign lesions:** Memorial Sloan Kettering Cancer Center, CC BY.
 - **PAD-UFES-20:** Pacheco A G C et al., 2020, via ISIC Archive collection 406, CC BY.
 - **Sample images** in `sample_images/` are from HAM10000, for trying the interface only.

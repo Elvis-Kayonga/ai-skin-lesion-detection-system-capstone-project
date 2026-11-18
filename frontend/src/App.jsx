@@ -7,8 +7,9 @@ import Upload from "./components/Upload.jsx";
 import ResultCard from "./components/ResultCard.jsx";
 import History from "./components/History.jsx";
 import Limitations from "./components/Limitations.jsx";
+import Privacy from "./components/Privacy.jsx";
 
-const TABS = [["screen", "Screen"], ["history", "History"], ["about", "Limitations"]];
+const TABS = [["screen", "Screen"], ["history", "History"], ["about", "Limitations"], ["privacy", "Privacy"]];
 
 export default function App() {
   const session = useSession();
@@ -76,11 +77,12 @@ export default function App() {
 
         {session.status === "ready" && tab === "history" && <History cases={cases} onOpen={openCase} />}
         {tab === "about" && <Limitations />}
+        {tab === "privacy" && <Privacy />}
       </main>
 
       <footer className="footer">
         <strong>{DISCLAIMER}</strong>
-        <span>Prototype for a university capstone. No real patient data.</span>
+        <span>Prototype for a university capstone. No real patient data. <button className="link" onClick={() => setTab("privacy")}>Privacy and terms</button></span>
       </footer>
     </div>
   );

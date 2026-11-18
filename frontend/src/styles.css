@@ -199,6 +199,9 @@ figcaption { color: var(--muted); font-size: 0.85rem; text-align: center; margin
 .limitations ul { margin: 0; padding-left: 20px; }
 .limitations li { margin: 8px 0; }
 .limitations.compact { background: #fffdf7; }
+.privacy h3 { margin: 18px 0 6px; font-size: 1rem; }
+.privacy ul { margin: 0; padding-left: 20px; }
+.privacy li { margin: 8px 0; }
 
 /* History */
 .table-wrap { overflow-x: auto; }
