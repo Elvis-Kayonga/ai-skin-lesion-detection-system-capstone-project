@@ -8,7 +8,7 @@ from datetime import datetime
 from . import models
 from .core.constants import DISCLAIMER
 from .core.errors import AuthenticationFailed, Conflict, InvalidInput
-from .ml.classifier import LesionClassifier
+from .ml.base import LesionClassifier
 from .ml.explainer import Explainer
 from .ml.review import ReviewPolicy
 from .quality import ImageValidator

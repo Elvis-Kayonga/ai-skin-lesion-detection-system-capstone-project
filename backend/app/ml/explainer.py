@@ -1,11 +1,13 @@
 """Visual explanations of a prediction."""
 import io
 from abc import ABC, abstractmethod
+from typing import TYPE_CHECKING
 
 import numpy as np
 from PIL import Image
 
-from .classifier import EfficientNetClassifier
+if TYPE_CHECKING:   # PyTorch is only imported when the PyTorch backend is used
+    from .classifier import EfficientNetClassifier
 
 
 class Explainer(ABC):
@@ -19,7 +21,7 @@ class GradCamExplainer(Explainer):
     """Grad-CAM on the last feature block (`features[-1]`), for the top predicted class, in eval mode, fp32.
     The heatmap shows where the model looked. It does not prove the answer is right."""
 
-    def __init__(self, classifier: EfficientNetClassifier):
+    def __init__(self, classifier: "EfficientNetClassifier"):
         self.classifier = classifier
 
     def explain(self, image: Image.Image, class_index: int) -> bytes:

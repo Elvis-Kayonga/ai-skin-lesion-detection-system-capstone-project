@@ -10,22 +10,38 @@ import numpy as np
 from PIL import Image
 
 from .config import Settings
-from .ml.classifier import EfficientNetClassifier, LesionClassifier
-from .ml.explainer import Explainer, GradCamExplainer
+from .ml.base import LesionClassifier
+from .ml.explainer import Explainer
 from .quality import ImageValidator
 from .security import PasswordHasher, TokenService
-from .storage import ImageStore
+from .storage import DbImageStore, ImageStore
 
 
 class AppContainer:
     def __init__(self, settings: Settings):
         self.settings = settings
         self.validator = ImageValidator.from_settings(settings)
-        classifier = EfficientNetClassifier(settings.model_dir / settings.weights_file,
-                                            settings.model_dir / settings.config_file, device=settings.device)
-        self.classifier: LesionClassifier = classifier
-        self.explainer: Explainer = GradCamExplainer(classifier)
-        self.store = ImageStore(settings.storage_dir)
+        self.classifier: LesionClassifier
+        self.explainer: Explainer
+        if settings.inference_backend == "onnx":
+            from .ml.onnx_runtime import CamExplainer, OnnxClassifier
+
+            onnx = OnnxClassifier(settings.model_dir / settings.onnx_file, settings.model_dir / settings.head_file,
+                                  settings.model_dir / settings.config_file)
+            self.classifier, self.explainer = onnx, CamExplainer(onnx)
+        else:   # PyTorch is imported only here, so the ONNX deployment does not need it installed
+            from .ml.classifier import EfficientNetClassifier
+            from .ml.explainer import GradCamExplainer
+
+            torch_clf = EfficientNetClassifier(settings.model_dir / settings.weights_file,
+                                               settings.model_dir / settings.config_file, device=settings.device)
+            self.classifier, self.explainer = torch_clf, GradCamExplainer(torch_clf)
+        if settings.image_store == "db":
+            from .db import SessionLocal
+
+            self.store = DbImageStore(SessionLocal, settings.storage_dir)
+        else:
+            self.store = ImageStore(settings.storage_dir)
         self.hasher = PasswordHasher()
         self.tokens = TokenService(settings.secret_key, settings.access_token_minutes)
 

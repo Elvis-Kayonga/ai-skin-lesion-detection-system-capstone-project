@@ -620,6 +620,13 @@ SQLite database, run with `uvicorn` and `npm run dev` (Section 3).
 
 Verified on 23 October 2026: all three containers started, the smoke test registered, predicted and read the history, and PostgreSQL held the cases, results and heatmap records (`docs/results/docker_postgres_check.json`). The first container start and first prediction are slow on a laptop (several minutes). Later predictions take 1 to 2 seconds.
 
+### Free online demo (Render + Supabase, $0)
+
+One container on Render's free plan serves the web app and the API; cases are stored in a free Supabase
+PostgreSQL database. To fit in 512 MB of RAM it runs the same model through ONNX Runtime instead of PyTorch
+(about 380 MB in use, identical probabilities and heatmaps, checked by `backend/tests/test_onnx_backend.py`).
+Setup and details: [deploy/render/README.md](deploy/render/README.md).
+
 ### Steps from prototype to a real pilot
 
 1. **Host:** one small cloud virtual machine in or near the region. A CPU is enough for one image at a time.

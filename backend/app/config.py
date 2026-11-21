@@ -40,6 +40,15 @@ class Settings(BaseSettings):
     # Run one throw-away prediction at start-up so the first real user does not pay the one-off set-up cost.
     warmup_on_startup: bool = True
 
+    # "torch" (default: PyTorch + pytorch_grad_cam) or "onnx" (no PyTorch, about a quarter of the memory; same
+    # model and maths, see app/ml/onnx_runtime.py). The online demo uses "onnx" to fit a 512 MB free instance.
+    inference_backend: str = "torch"
+    onnx_file: str = "efficientnet_b3_features.onnx"
+    head_file: str = "classifier_head.npz"
+    # "disk" (default) or "db": keep photos and heatmaps in the database. Use "db" on hosts whose disk is
+    # wiped on restart, so the case history keeps working.
+    image_store: str = "disk"
+
 
 settings = Settings()
 settings.storage_dir.mkdir(parents=True, exist_ok=True)
