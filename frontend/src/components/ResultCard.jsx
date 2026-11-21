@@ -1,4 +1,6 @@
 import { DISCLAIMER } from "../constants.js";
+import { referralAdvice } from "../advice.js";
+import TriageScale from "./TriageScale.jsx";
 
 const NAMES = {
   akiec: "Actinic keratoses",
@@ -25,16 +27,26 @@ export default function ResultCard({ result, original }) {
   // Meter runs from 0 to 2x the review threshold; the marker sits at the threshold.
   const meterMax = result.entropy_threshold * 2;
   const meterPct = Math.min(result.entropy / meterMax, 1) * 100;
+  const advice = referralAdvice(result);
 
   return (
     <section className="card result" aria-live="polite">
       <div className="card-head">
         <h2>Result</h2>
+        <span className="meta-inline">Case #{result.case_id}</span>
+      </div>
+
+      <TriageScale active={advice.level} />
+
+      <div className={`advice advice-${advice.level}`} role={advice.level === "watch" ? "status" : "alert"}>
+        <div className="advice-label">What to do next</div>
+        <div className="advice-title">{advice.title}</div>
+        <p>{advice.body}</p>
       </div>
 
       {result.review_recommended && (
-        <div className="notice warn" role="alert">
-          <strong>Review recommended.</strong> {result.review_reason}
+        <div className="notice warn">
+          <strong>Review recommended.</strong> Why the system flagged this: {result.review_reason}
         </div>
       )}
 
@@ -84,7 +96,7 @@ export default function ResultCard({ result, original }) {
       </p>
 
       <p className="meta">
-        Case #{result.case_id} &middot; model {result.model_version} &middot; {result.inference_ms} ms
+        Case #{result.case_id}, model {result.model_version}, analysed in {result.inference_ms} ms
       </p>
       <div className="disclaimer">{result.disclaimer || DISCLAIMER}</div>
     </section>

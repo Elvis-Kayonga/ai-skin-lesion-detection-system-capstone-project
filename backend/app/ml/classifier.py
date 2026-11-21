@@ -7,11 +7,8 @@ stub in tests) without changing any other code.
 import logging
 import threading
 import traceback
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from pathlib import Path
 
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -19,42 +16,11 @@ from PIL import Image
 from torchvision import models, transforms
 
 from ..core.errors import ModelNotReady
+from .base import LesionClassifier, Prediction  # noqa: F401  (re-exported for existing imports)
 from .model_config import ModelConfig
 from .uncertainty import predictive_entropy
 
 log = logging.getLogger("ml")
-
-
-@dataclass(frozen=True)
-class Prediction:
-    probabilities: np.ndarray   # MC-averaged softmax over the classes, sums to 1
-    entropy: float
-
-    @property
-    def top_index(self) -> int:
-        return int(np.argmax(self.probabilities))
-
-
-class LesionClassifier(ABC):
-    """Turns a lesion photo into class probabilities with an uncertainty estimate."""
-
-    @abstractmethod
-    def load(self) -> None: ...
-
-    @property
-    @abstractmethod
-    def ready(self) -> bool: ...
-
-    @property
-    @abstractmethod
-    def config(self) -> ModelConfig | None: ...
-
-    @property
-    @abstractmethod
-    def error(self) -> str | None: ...
-
-    @abstractmethod
-    def predict(self, image: Image.Image) -> Prediction: ...
 
 
 class EfficientNetClassifier(LesionClassifier):

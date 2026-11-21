@@ -1,7 +1,7 @@
 """Database tables: users, cases, classification_results and explainability_maps."""
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import JSON, Boolean, DateTime, Float, ForeignKey, Integer, LargeBinary, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .db import Base
@@ -52,3 +52,10 @@ class ExplainabilityMap(Base):
     case_id: Mapped[int] = mapped_column(ForeignKey("cases.id"), unique=True)
     heatmap_path: Mapped[str] = mapped_column(String(500))
     case: Mapped[Case] = relationship(back_populates="heatmap")
+
+
+class StoredFile(Base):
+    """Photo or heatmap bytes, used only when IMAGE_STORE=db (hosts without a persistent disk)."""
+    __tablename__ = "stored_files"
+    key: Mapped[str] = mapped_column(String(100), primary_key=True)
+    data: Mapped[bytes] = mapped_column(LargeBinary)

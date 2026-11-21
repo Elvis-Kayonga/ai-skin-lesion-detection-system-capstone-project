@@ -14,6 +14,7 @@ Author: Kayonga Elvis (African Leadership University, BSc Software Engineering, 
 
 Links:
 
+- **Live demo: https://skin-lesion-screening.onrender.com** (free hosting: the first visit after 15 idle minutes takes about a minute to wake up)
 - GitHub repo: https://github.com/Elvis-Kayonga/ai-skin-lesion-detection-system-capstone-project
 - Demo video: https://youtu.be/votQSD1zOco
 - Technical report (PDF): [docs/report/Technical_Report_Kayonga_Elvis.pdf](docs/report/Technical_Report_Kayonga_Elvis.pdf)
@@ -619,6 +620,13 @@ SQLite database, run with `uvicorn` and `npm run dev` (Section 3).
 ```
 
 Verified on 23 October 2026: all three containers started, the smoke test registered, predicted and read the history, and PostgreSQL held the cases, results and heatmap records (`docs/results/docker_postgres_check.json`). The first container start and first prediction are slow on a laptop (several minutes). Later predictions take 1 to 2 seconds.
+
+### Free online demo (Render + Supabase, $0)
+
+One container on Render's free plan serves the web app and the API; cases are stored in a free Supabase
+PostgreSQL database. To fit in 512 MB of RAM it runs the same model through ONNX Runtime instead of PyTorch
+(about 380 MB in use, identical probabilities and heatmaps, checked by `backend/tests/test_onnx_backend.py`).
+Live at https://skin-lesion-screening.onrender.com (deployed 21 November 2026; health check, screening, review flag, blur rejection and case history verified on the live site). Setup and details: [deploy/render/README.md](deploy/render/README.md).
 
 ### Steps from prototype to a real pilot
 
