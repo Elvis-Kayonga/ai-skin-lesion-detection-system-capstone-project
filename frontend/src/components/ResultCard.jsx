@@ -1,4 +1,5 @@
 import { DISCLAIMER } from "../constants.js";
+import { referralAdvice } from "../advice.js";
 
 const NAMES = {
   akiec: "Actinic keratoses",
@@ -25,6 +26,7 @@ export default function ResultCard({ result, original }) {
   // Meter runs from 0 to 2x the review threshold; the marker sits at the threshold.
   const meterMax = result.entropy_threshold * 2;
   const meterPct = Math.min(result.entropy / meterMax, 1) * 100;
+  const advice = referralAdvice(result);
 
   return (
     <section className="card result" aria-live="polite">
@@ -32,9 +34,15 @@ export default function ResultCard({ result, original }) {
         <h2>Result</h2>
       </div>
 
+      <div className={`advice advice-${advice.level}`} role={advice.level === "watch" ? "status" : "alert"}>
+        <div className="advice-label">What to do next</div>
+        <div className="advice-title">{advice.title}</div>
+        <p>{advice.body}</p>
+      </div>
+
       {result.review_recommended && (
-        <div className="notice warn" role="alert">
-          <strong>Review recommended.</strong> {result.review_reason}
+        <div className="notice warn">
+          <strong>Review recommended.</strong> Why the system flagged this: {result.review_reason}
         </div>
       )}
 

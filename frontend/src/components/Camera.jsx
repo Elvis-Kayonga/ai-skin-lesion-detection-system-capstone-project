@@ -14,6 +14,22 @@ export default function Camera({ onCapture, onCancel, onUnavailable }) {
   const [ready, setReady] = useState(false);
   const [error, setError] = useState("");
   const [facing, setFacing] = useState("environment");
+  // Flash ("torch"): browsers only allow a page to switch it on in some cases (Chrome on Android with the
+  // back camera). Elsewhere (iPhone, laptops) the button is hidden and the hint asks for bright light.
+  const [torchSupported, setTorchSupported] = useState(false);
+  const [torchOn, setTorchOn] = useState(false);
+
+  const setTorch = async (on) => {
+    const track = streamRef.current && streamRef.current.getVideoTracks()[0];
+    if (!track) return false;
+    try {
+      await track.applyConstraints({ advanced: [{ torch: on }] });
+      setTorchOn(on);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   const stop = () => {
     if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
@@ -24,6 +40,8 @@ export default function Camera({ onCapture, onCancel, onUnavailable }) {
     let cancelled = false;
     setReady(false);
     setError("");
+    setTorchSupported(false);
+    setTorchOn(false);
     (async () => {
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         onUnavailable();
@@ -43,6 +61,18 @@ export default function Camera({ onCapture, onCancel, onUnavailable }) {
         videoRef.current.srcObject = stream;
         await videoRef.current.play().catch(() => {});
         setReady(true);
+        // Turn the flash on by default when this device lets the browser control it.
+        const track = stream.getVideoTracks()[0];
+        const caps = track && typeof track.getCapabilities === "function" ? track.getCapabilities() : {};
+        if (caps && caps.torch) {
+          setTorchSupported(true);
+          try {
+            await track.applyConstraints({ advanced: [{ torch: true }] });
+            if (!cancelled) setTorchOn(true);
+          } catch {
+            /* flash refused: keep going without it */
+          }
+        }
       } catch (e) {
         if (!cancelled) setError(cameraMessage(e));
       }
@@ -78,10 +108,20 @@ export default function Camera({ onCapture, onCancel, onUnavailable }) {
           <div className="camera-guide" aria-hidden="true" />
         </div>
       )}
-      <p className="hint">Hold steady, use good light and centre the lesion inside the circle. Fill most of the frame.</p>
+      <p className="hint">
+        {torchSupported
+          ? "The flash helps the system see the skin clearly. "
+          : "This browser cannot turn on the flash, so use bright light (daylight near a window works well). "}
+        Hold steady about 10 cm from the skin and centre the spot inside the circle.
+      </p>
       <div className="row">
         {!error && (
           <button className="btn primary" onClick={capture} disabled={!ready}>Capture photo</button>
+        )}
+        {!error && torchSupported && (
+          <button className="btn" onClick={() => setTorch(!torchOn)} aria-pressed={torchOn}>
+            {torchOn ? "Flash: on" : "Flash: off"}
+          </button>
         )}
         {!error && (
           <button className="btn" onClick={() => setFacing(facing === "environment" ? "user" : "environment")}>

@@ -7,6 +7,7 @@ import Upload from "./components/Upload.jsx";
 import ResultCard from "./components/ResultCard.jsx";
 import History from "./components/History.jsx";
 import Limitations from "./components/Limitations.jsx";
+import HowToUse from "./components/HowToUse.jsx";
 
 const TABS = [["screen", "Screen"], ["history", "History"], ["about", "Limitations"]];
 
@@ -69,6 +70,7 @@ export default function App() {
 
         {session.status === "ready" && tab === "screen" && (
           <>
+            <HowToUse />
             <Upload onStart={() => setResult(null)} onResult={showResult} />
             {result ? <ResultCard result={result} original={original} /> : <Limitations compact />}
           </>
