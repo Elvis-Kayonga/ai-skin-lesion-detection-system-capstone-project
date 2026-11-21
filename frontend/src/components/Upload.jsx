@@ -59,6 +59,7 @@ export default function Upload({ onStart, onResult }) {
         />
       ) : (
         <>
+          <div className="stage">
           {!preview && (
             <div
               className={`dropzone ${drag ? "drag" : ""}`}
@@ -71,17 +72,18 @@ export default function Upload({ onStart, onResult }) {
                   <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5" /><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" />
                 </svg>
               </div>
-              <p><strong>Drag and drop a photo here</strong></p>
-              <p className="muted small">or use one of the buttons below</p>
+              <p className="drop-title">Drag and drop a photo here</p>
+              <p className="drop-sub">or use one of the buttons below</p>
             </div>
           )}
 
           {preview && (
             <div className="preview-wrap">
               <img className="preview" src={preview} alt="Selected lesion preview" />
-              <p className="muted small">{file && file.name}</p>
+              <p className="preview-name">{file && file.name}</p>
             </div>
           )}
+          </div>
 
           <div className="row">
             <button className="btn" onClick={() => setMode("camera")} disabled={busy}>

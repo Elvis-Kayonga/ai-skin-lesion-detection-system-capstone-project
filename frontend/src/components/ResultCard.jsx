@@ -1,5 +1,6 @@
 import { DISCLAIMER } from "../constants.js";
 import { referralAdvice } from "../advice.js";
+import TriageScale from "./TriageScale.jsx";
 
 const NAMES = {
   akiec: "Actinic keratoses",
@@ -32,7 +33,10 @@ export default function ResultCard({ result, original }) {
     <section className="card result" aria-live="polite">
       <div className="card-head">
         <h2>Result</h2>
+        <span className="meta-inline">Case #{result.case_id}</span>
       </div>
+
+      <TriageScale active={advice.level} />
 
       <div className={`advice advice-${advice.level}`} role={advice.level === "watch" ? "status" : "alert"}>
         <div className="advice-label">What to do next</div>
@@ -92,7 +96,7 @@ export default function ResultCard({ result, original }) {
       </p>
 
       <p className="meta">
-        Case #{result.case_id} &middot; model {result.model_version} &middot; {result.inference_ms} ms
+        Case #{result.case_id}, model {result.model_version}, analysed in {result.inference_ms} ms
       </p>
       <div className="disclaimer">{result.disclaimer || DISCLAIMER}</div>
     </section>

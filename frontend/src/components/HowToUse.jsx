@@ -26,7 +26,7 @@ export default function HowToUse() {
   };
 
   return (
-    <details className="card howto" open={open} onToggle={toggle}>
+    <details className="howto" open={open} onToggle={toggle}>
       <summary>How to use this app (read this first)</summary>
       <ol className="howto-steps">
         <li>
