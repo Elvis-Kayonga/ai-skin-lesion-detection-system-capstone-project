@@ -13,4 +13,5 @@ pillow>=10.0
 opencv-python-headless>=4.9
 numpy>=1.26
 onnxruntime>=1.17
+psycopg[binary]>=3.1   # SQLAlchemy 2.1+ uses psycopg 3 for postgresql:// URLs
 psycopg2-binary>=2.9
